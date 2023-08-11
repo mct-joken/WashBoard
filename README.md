@@ -2,14 +2,21 @@
 
 - [Remix Docs](https://remix.run/docs)
 
-## Development
+## 開発
 
-You will be utilizing Wrangler for local development to emulate the Cloudflare runtime. This is already wired up in your package.json as the `dev` script:
+### 必要なもの
+
+- [https://pnpm.io/](pnpm)
+- [https://nodejs.org/en](Nodejs)
+
+### 実行
 
 ```sh
-# start the remix dev server and wrangler
-npm run dev
+pnpm run dev
 ```
+
+できたらブラウザで[http://localhost:8788](http://localhost:8788)を開く
+
 
 Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
 
