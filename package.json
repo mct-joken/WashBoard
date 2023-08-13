@@ -9,6 +9,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "^5.1.1",
     "@remix-run/cloudflare": "^1.19.3",
     "@remix-run/cloudflare-pages": "^1.19.3",
     "@remix-run/css-bundle": "^1.19.3",
@@ -24,6 +25,7 @@
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "eslint": "^8.38.0",
+    "prisma": "^5.1.1",
     "typescript": "^5.0.4",
     "wrangler": "^3.1.1"
   },
