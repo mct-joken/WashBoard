@@ -5,4 +5,4 @@ node_modules
 /functions
 /public/build
 .dev.vars
-*.local
+.env.*
