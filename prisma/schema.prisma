@@ -9,3 +9,61 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Account {
+  id    String @id @default(cuid())
+  email String @unique
+  role  Int    @default(1) // 1がUser, 2がAdmin
+
+  use         Use[]        @relation("use_account_fk")
+  use_history UseHistory[] @relation("use_history_account_fk")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Room {
+  id    String @id @default(cuid())
+  place String
+
+  laundry Laundry[] @relation("laundry_room_fk")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Laundry {
+  id      String @id @default(cuid())
+  room_id String
+
+  room        Room         @relation(name: "laundry_room_fk", fields: [room_id], references: [id])
+  use         Use[]        @relation("use_laundry_fk")
+  use_history UseHistory[] @relation("use_history_laundry_fk")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Use {
+  id         String @id @default(cuid())
+  account_id String
+  laundry_id String
+
+  account Account @relation(name: "use_account_fk", fields: [account_id], references: [id])
+  laundry Laundry @relation(name: "use_laundry_fk", fields: [laundry_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model UseHistory {
+  id         String @id @default(cuid())
+  account_id String
+  laundry_id String
+
+  account Account @relation(name: "use_history_account_fk", fields: [account_id], references: [id])
+  laundry Laundry @relation(name: "use_history_laundry_fk", fields: [laundry_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
