@@ -1,0 +1,2 @@
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
