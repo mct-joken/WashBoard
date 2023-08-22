@@ -24,8 +24,7 @@ export default function Menu() {
   const WashColor = isWash?  "#006399" : "#1c1B1F";
   const SettingsColor = isSettings?  "#006399" : "#1c1B1F";
 
-  const ImgWidth = 'w-10'; // 画像の幅を制御するカスタムクラス
-  const ImgHeight = 'h-10'; // 画像の高さを制御するカスタムクラス
+  
   return (
 
     
