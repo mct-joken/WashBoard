@@ -9,7 +9,7 @@ import {
 export const accounts = sqliteTable(
   "accounts",
   {
-    id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+    id: text("id").primaryKey(),
     email: text("email").notNull().unique(),
     role: integer("role", { mode: "number" }).default(1), // 1: User, 2: Admin
     createdAt: integer("createdAt", { mode: "timestamp_ms" })
