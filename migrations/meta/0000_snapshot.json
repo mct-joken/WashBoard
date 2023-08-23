@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "eeadd3ef-c28e-48ac-8000-8c54cb11c9ca",
+  "id": "9c4b4675-8091-4ee7-8727-c74f60764ec9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "accounts": {
@@ -9,10 +9,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "email": {
           "name": "email",
@@ -52,13 +52,6 @@
             "email"
           ],
           "isUnique": true
-        },
-        "emailIdx": {
-          "name": "emailIdx",
-          "columns": [
-            "email"
-          ],
-          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -70,14 +63,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
-        "room_id": {
-          "name": "room_id",
-          "type": "integer",
+        "roomId": {
+          "name": "roomId",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -108,12 +101,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "laundries_room_id_rooms_id_fk": {
-          "name": "laundries_room_id_rooms_id_fk",
+        "laundries_roomId_rooms_id_fk": {
+          "name": "laundries_roomId_rooms_id_fk",
           "tableFrom": "laundries",
           "tableTo": "rooms",
           "columnsFrom": [
-            "room_id"
+            "roomId"
           ],
           "columnsTo": [
             "id"
@@ -130,10 +123,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "place": {
           "name": "place",
@@ -176,21 +169,21 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "accountId": {
           "name": "accountId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "laundryId": {
           "name": "laundryId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -262,21 +255,21 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "accountId": {
           "name": "accountId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "laundryId": {
           "name": "laundryId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
