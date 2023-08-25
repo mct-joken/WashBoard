@@ -52,7 +52,7 @@ export default function Setting() {
     setReminder(e.target.checked);
   };
   const handleReminderIntervalChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const value = e.target.value;
     setReminderInterval(value);
@@ -115,7 +115,7 @@ export default function Setting() {
               <p>リマインダーの間隔</p>
               <select
                 className="w-25 h-7 text-base bg-white border border-gray-300 rounded-md"
-                onChange={(e) => handleReminderIntervalChange(e)}
+                onChange={handleReminderIntervalChange}
                 value={reminderInterval}
                 disabled={!reminder}
               >
