@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { rooms } from "./rooms";
-import { sql } from "drizzle-orm";
+import { InferModel, sql } from "drizzle-orm";
 
 export const laundries = sqliteTable("laundries", {
   id: text("id").primaryKey(),
@@ -11,3 +11,6 @@ export const laundries = sqliteTable("laundries", {
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
+
+export type Laundry = InferModel<typeof laundries>;
+export type NewLaundry = InferModel<typeof laundries, "insert">;
