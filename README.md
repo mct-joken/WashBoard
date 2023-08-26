@@ -17,7 +17,6 @@ pnpm run dev
 
 できたらブラウザで[http://localhost:8788](http://localhost:8788)を開く
 
-
 Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
 
 ## Deployment
