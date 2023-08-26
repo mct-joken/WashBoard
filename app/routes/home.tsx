@@ -1,25 +1,62 @@
 import Logo from "../../public/images/logo.png"; 
 import styles from "../tailwind.css";
 import { json,LinksFunction } from "@remix-run/cloudflare"; 
-import { useLoaderData } from "@remix-run/react";
+import { Link,useLoaderData,useLocation } from "@remix-run/react";
 //import { getData } from "~/models/home.sever";
 
 // export const loader = async () => {
 //   return json({ posts: await getData() });
 // };
 
+
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: styles },
 ];
+//この辺でデータとか取ってきて自分の使用状況たしかめる
 const ngmsg="なし";
 let okmsg="使用中";
 const msg = () => {
-    if ( false ) {
-        return <p className="text-center mb-5">{okmsg}</p>     
+
+    if ( true ) {
+        return <div><p  className="text-center mb-5">{ okmsg }</p><Link to="/wash"><div className="  w-20 text-center  rounded-full bg-green-400 active:bg-green-700  hover:bg-green-700 py-1 px-5 text-white mr-3  ">回収</div></Link> {""}</div>
     } else {
         return <p className="text-center mb-5">{ ngmsg }</p> 
     }
 }
+const datas =[
+    {
+        name:"4棟2階",
+        num:2
+    },
+        {
+        name:"4棟3階",
+        num:2
+    },
+        {
+        name:"5棟1階",
+        num:1
+    },
+        {
+        name:"5棟2階",
+        num:2
+    },    {
+        name:"5棟3階",
+        num:1
+    },
+]
+
+export function showdata(free:number){
+    for (let i = 0; i < datas.length; i++) {
+        if(free == 0){
+            if(datas[i]["num"] == 1)
+                return "満";
+            else
+                return "空";
+        }else if(free == 1)
+            return datas[i]["name"];
+    }
+}
+
 
 export default function home(){
     return (
@@ -40,11 +77,12 @@ export default function home(){
             </form>
             <p className="border rounded mx-10"></p>
                 <div className=" max-h-72 mx-5 px-5 my-5  overflow-y-auto">
-
+                    {/*DBからデータ取れるようになるまで仮のデータ*/}
+                    
                     <div className="flex flex-row justify-center my-2.5 ">
-                        <div className=" rounded-full bg-red-400 active:bg-red-400  hover:bg-pink-700 py-1 px-5 text-white mr-3 p-0 w-30 ">満</div>
-                        <div className=" text-20 mr-2 text-lg"><p>4棟2階</p></div>
-                        <div className=" text-20 text-lg"><p>2台使用可</p></div>
+                        <div className=" rounded-full bg-red-400 active:bg-red-400  hover:bg-pink-700 py-1 px-5 text-white mr-3 p-0 w-30 ">{showdata(0)}</div>
+                        <div className=" text-20 mr-2 text-lg"><p>{showdata(1)}</p></div>
+                        <div className=" text-20 text-lg"><p>1台使用可</p></div>
                     </div>
                     <div className="flex flex-row justify-center my-2.5 ">
                     <div className=" rounded-full bg-blue-400 active:bg-blue-400  hover:bg-pink-700 py-1 px-5 text-white mr-3 p-0 w-30 ">空</div>
@@ -106,6 +144,7 @@ export default function home(){
                 <p className="border rounded mx-10"></p>
                 <p className="text-center mb-5">あなたの利用状況</p>
                     {msg()}
+
         </div>
     )
 
