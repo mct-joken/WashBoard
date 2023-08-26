@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
 
-const LaundryWithRoomFields = {
+const laundryWithRoomFields = {
   ...laundries._.columns,
   room: rooms._.columns,
 };
@@ -20,7 +20,7 @@ export async function getLaundries(
   context: AppLoadContext
 ): Promise<LaundryWithRoom[]> {
   return getClient(context)
-    .select(LaundryWithRoomFields)
+    .select(laundryWithRoomFields)
     .from(laundries)
     .leftJoin(rooms, eq(laundries.roomId, rooms.id))
     .all();
@@ -37,7 +37,7 @@ export async function getLaundryById(
   id: Laundry["id"]
 ): Promise<LaundryWithRoom | undefined> {
   return getClient(context)
-    .select(LaundryWithRoomFields)
+    .select(laundryWithRoomFields)
     .from(laundries)
     .leftJoin(rooms, eq(laundries.roomId, rooms.id))
     .where(eq(laundries.id, id))
