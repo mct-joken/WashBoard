@@ -9,7 +9,7 @@ export default function Setting() {
 
   const [notification, setNotification] = useState(false);
   const [reminder, setReminder] = useState(false);
-  const [reminderInterval, setReminderInterval] = useState<string>(""); // [min
+  const [reminderInterval, setReminderInterval] = useState<string>("");
 
   // Remixだと本来のやり方だとlocalStorageが使えないので、useEffectを使っています。詳しくは以下を参照してください。
   // https://remix.run/docs/en/1.19.3/guides/constraints#rendering-with-browser-only-apis
