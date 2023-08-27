@@ -12,7 +12,7 @@ import {
   uses,
 } from "~/db/schema";
 
-const UseWithAccountLaundryFields = {
+const useWithAccountLaundryFields = {
   ...uses._.columns,
   account: accounts._.columns,
   laundry: laundries._.columns,
@@ -32,7 +32,7 @@ export async function getUses(
   context: AppLoadContext
 ): Promise<UseWithAccountLaundry[]> {
   return getClient(context)
-    .select(UseWithAccountLaundryFields)
+    .select(useWithAccountLaundryFields)
     .from(uses)
     .leftJoin(accounts, eq(uses.accountId, accounts.id))
     .leftJoin(laundries, eq(uses.laundryId, laundries.id))
@@ -50,7 +50,7 @@ export async function getUseById(
   id: Use["id"]
 ): Promise<UseWithAccountLaundry | undefined> {
   return getClient(context)
-    .select(UseWithAccountLaundryFields)
+    .select(useWithAccountLaundryFields)
     .from(uses)
     .leftJoin(accounts, eq(uses.accountId, accounts.id))
     .leftJoin(laundries, eq(uses.laundryId, laundries.id))
@@ -66,14 +66,14 @@ export async function getUseById(
  */
 export async function getUsesByAccountId(
   context: AppLoadContext,
-  id: Use["id"]
+  accountId: Use["accountId"] & string
 ): Promise<UseWithAccountLaundry[]> {
   return getClient(context)
-    .select(UseWithAccountLaundryFields)
+    .select(useWithAccountLaundryFields)
     .from(uses)
     .leftJoin(accounts, eq(uses.accountId, accounts.id))
     .leftJoin(laundries, eq(uses.laundryId, laundries.id))
-    .where(eq(uses.id, id))
+    .where(eq(uses.accountId, accountId))
     .all();
 }
 
@@ -85,14 +85,14 @@ export async function getUsesByAccountId(
  */
 export async function getUseByLaundryId(
   context: AppLoadContext,
-  id: Use["id"]
+  laundryId: Use["laundryId"] & string
 ): Promise<UseWithAccountLaundry | undefined> {
   return getClient(context)
-    .select(UseWithAccountLaundryFields)
+    .select(useWithAccountLaundryFields)
     .from(uses)
-    .where(eq(uses.id, id))
     .leftJoin(accounts, eq(uses.accountId, accounts.id))
     .leftJoin(laundries, eq(uses.laundryId, laundries.id))
+    .where(eq(uses.laundryId, laundryId))
     .get();
 }
 
