@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { InferModel, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { accounts } from "./accounts";
 import { laundries } from "./laundries";
@@ -14,3 +14,6 @@ export const useHistories = sqliteTable("useHistories", {
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
+
+export type UseHistory = InferModel<typeof useHistories>;
+export type NewUseHistory = InferModel<typeof useHistories, "insert">;
