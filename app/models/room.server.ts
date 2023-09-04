@@ -1,5 +1,4 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { NewRoom, Room, rooms } from "~/db/schema";
@@ -53,7 +52,7 @@ export async function createRoom(
   context: AppLoadContext,
   place: Room["place"]
 ): Promise<Room | undefined> {
-  const newRoom: NewRoom = { id: cuid(), place };
+  const newRoom: NewRoom = { place };
 
   return getClient(context).insert(rooms).values(newRoom).returning().get();
 }

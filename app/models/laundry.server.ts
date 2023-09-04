@@ -1,5 +1,4 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
@@ -54,7 +53,7 @@ export async function createLaundry(
   context: AppLoadContext,
   roomId: Laundry["roomId"]
 ): Promise<Laundry | undefined> {
-  const newLaundry: NewLaundry = { id: cuid(), roomId };
+  const newLaundry: NewLaundry = { roomId };
 
   return getClient(context)
     .insert(laundries)
