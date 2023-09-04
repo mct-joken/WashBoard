@@ -1,9 +1,12 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { rooms } from "./rooms";
 import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 export const laundries = sqliteTable("laundries", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   roomId: text("roomId").references(() => rooms.id),
   running: integer("running", { mode: "boolean" }).default(false),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
