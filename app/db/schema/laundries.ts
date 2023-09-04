@@ -7,7 +7,10 @@ export const laundries = sqliteTable("laundries", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  roomId: text("roomId").references(() => rooms.id),
+  roomId: text("roomId").references(() => rooms.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade",
+  }),
   running: integer("running", { mode: "boolean" }).default(false),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .default(sql`CURRENT_TIMESTAMP`)

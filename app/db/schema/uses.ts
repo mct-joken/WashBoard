@@ -8,8 +8,14 @@ export const uses = sqliteTable("uses", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  accountId: text("accountId").references(() => accounts.id),
-  laundryId: text("laundryId").references(() => laundries.id),
+  accountId: text("accountId").references(() => accounts.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade",
+  }),
+  laundryId: text("laundryId").references(() => laundries.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade",
+  }),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
