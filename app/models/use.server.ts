@@ -1,5 +1,4 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
@@ -108,7 +107,7 @@ export async function createUse(
   accountId: Use["accountId"],
   laundryId: Use["laundryId"]
 ): Promise<Use | undefined> {
-  const newUse: NewUse = { id: cuid(), accountId, laundryId };
+  const newUse: NewUse = { accountId, laundryId };
 
   return getClient(context).insert(uses).values(newUse).returning().get();
 }
