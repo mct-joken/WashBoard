@@ -1,5 +1,4 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
@@ -111,7 +110,6 @@ export async function createUseHistory(
   endAt: UseHistory["endAt"]
 ): Promise<UseHistory | undefined> {
   const newUseHistory: NewUseHistory = {
-    id: cuid(),
     accountId,
     laundryId,
     startAt,
