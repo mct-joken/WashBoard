@@ -1,11 +1,16 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
 
-const laundryWithRoomFields = {
-  ...laundries._.columns,
-  room: rooms._.columns,
+export const laundryWithRoomFields = {
+  ...getTableColumns(laundries),
+  room: {
+    id: rooms.id.getSQL().as("_roomId"),
+    place: rooms.place.getSQL().as("_roomPlace"),
+    createdAt: rooms.createdAt.getSQL().as("_roomCreatedAt"),
+    updatedAt: rooms.updatedAt.getSQL().as("_roomUpdatedAt"),
+  },
 };
 
 type LaundryWithRoom = Omit<Laundry & { room: Room | null }, "roomId">;
@@ -58,6 +63,21 @@ export async function createLaundry(
   return getClient(context)
     .insert(laundries)
     .values(newLaundry)
+    .returning()
+    .get();
+}
+
+export async function updateLaundry(
+  context: AppLoadContext,
+  laundry: {
+    id: Laundry["id"];
+    running: Laundry["running"];
+  }
+): Promise<Laundry | undefined> {
+  return getClient(context)
+    .update(laundries)
+    .set({ running: laundry.running })
+    .where(eq(laundries.id, laundry.id))
     .returning()
     .get();
 }

@@ -1,5 +1,5 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
   Account,
@@ -12,9 +12,21 @@ import {
 } from "~/db/schema";
 
 const useWithAccountLaundryFields = {
-  ...uses._.columns,
-  account: accounts._.columns,
-  laundry: laundries._.columns,
+  ...getTableColumns(uses),
+  account: {
+    id: accounts.id.getSQL().as("_accountId"),
+    email: accounts.email.getSQL().as("_accountEmail"),
+    role: accounts.role.getSQL().as("_accountRole"),
+    createdAt: accounts.createdAt.getSQL().as("_accountCreatedAt"),
+    updatedAt: accounts.updatedAt.getSQL().as("_accountUpdatedAt"),
+  },
+  laundry: {
+    id: laundries.id.getSQL().as("_laundryId"),
+    roomId: laundries.roomId.getSQL().as("_laundryRoomId"),
+    running: laundries.running.getSQL().as("_laundryRunning"),
+    createdAt: laundries.createdAt.getSQL().as("_laundryCreatedAt"),
+    updatedAt: laundries.updatedAt.getSQL().as("_laundryUpdatedAt"),
+  },
 };
 
 type UseWithAccountLaundry = Omit<
