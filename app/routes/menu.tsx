@@ -13,7 +13,7 @@ export default function Menu() {
 
   const isHome = pathname === "/home";
   const isWash = pathname === "/wash";
-  const isSettings = pathname === "/settings";
+  const isSettings = pathname === "/setting";
 
   const HomeColor = isHome ? "#006399" : "#1c1B1F"; //アクセスしているなら青 してないならそのまま
   const WashColor = isWash ? "#006399" : "#1c1B1F";

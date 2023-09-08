@@ -60,14 +60,16 @@ const datas = [
   },
 ];
 
+
 export function showdata(selectdata: string) {
   return datas.map((element) => {
     if (selectdata == "empty" && element.empty == 0) {
       return (
         <div className="flex flex-row justify-center my-2.5 ">
-          <div className=" rounded-full bg-red-400 active:bg-red-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
-            満
+          <div className=" rounded-full bg-blue-400 active:bg-blue-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
+            空
           </div>
+
           <div className=" text-20 mr-2 text-lg">
             <p>{element.label}</p>
           </div>
