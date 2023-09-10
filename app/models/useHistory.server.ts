@@ -10,22 +10,23 @@ import {
   laundries,
   useHistories,
 } from "~/db/schema";
+import { makeAlias } from "~/utils/makeAlias";
 
 const useHistoryWithAccountLaundryFields = {
   ...getTableColumns(useHistories),
   account: {
-    id: accounts.id.getSQL().as("_accountId"),
-    email: accounts.email.getSQL().as("_accountEmail"),
-    role: accounts.role.getSQL().as("_accountRole"),
-    createdAt: accounts.createdAt.getSQL().as("_accountCreatedAt"),
-    updatedAt: accounts.updatedAt.getSQL().as("_accountUpdatedAt"),
+    id: makeAlias(accounts.id),
+    email: makeAlias(accounts.email),
+    role: makeAlias(accounts.role),
+    createdAt: makeAlias(accounts.createdAt),
+    updatedAt: makeAlias(accounts.updatedAt),
   },
   laundry: {
-    id: laundries.id.getSQL().as("_laundryId"),
-    roomId: laundries.roomId.getSQL().as("_laundryRoomId"),
-    running: laundries.running.getSQL().as("_laundryRunning"),
-    createdAt: laundries.createdAt.getSQL().as("_laundryCreatedAt"),
-    updatedAt: laundries.updatedAt.getSQL().as("_laundryUpdatedAt"),
+    id: makeAlias(laundries.id),
+    roomId: makeAlias(laundries.roomId),
+    running: makeAlias(laundries.running),
+    createdAt: makeAlias(laundries.createdAt),
+    updatedAt: makeAlias(laundries.updatedAt),
   },
 };
 

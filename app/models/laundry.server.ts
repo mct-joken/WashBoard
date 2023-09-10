@@ -2,14 +2,15 @@ import { AppLoadContext } from "@remix-run/cloudflare";
 import { eq, getTableColumns } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
+import { makeAlias } from "~/utils/makeAlias";
 
-export const laundryWithRoomFields = {
+const laundryWithRoomFields = {
   ...getTableColumns(laundries),
   room: {
-    id: rooms.id.getSQL().as("_roomId"),
-    place: rooms.place.getSQL().as("_roomPlace"),
-    createdAt: rooms.createdAt.getSQL().as("_roomCreatedAt"),
-    updatedAt: rooms.updatedAt.getSQL().as("_roomUpdatedAt"),
+    id: makeAlias(rooms.id),
+    place: makeAlias(rooms.place),
+    createdAt: makeAlias(rooms.createdAt),
+    updatedAt: makeAlias(rooms.updatedAt),
   },
 };
 
