@@ -5,7 +5,8 @@ interface Env {
   DB: D1Database;
 }
 
-export const client = (database: D1Database) => drizzle(database);
+export const client = (database: D1Database) =>
+  drizzle(database, { logger: true });
 
 /**
  * データベースの`client`を作成する
