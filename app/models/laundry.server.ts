@@ -68,6 +68,12 @@ export async function createLaundry(
     .get();
 }
 
+/**
+ * `laundries`テーブルの`id`が合致する`Laundry`を更新する
+ * @param context `loader`関数で渡される`context`
+ * @param laundry 更新する`Laundry`
+ * @returns 更新された`Laundry`
+ */
 export async function updateLaundry(
   context: AppLoadContext,
   laundry: {
@@ -77,7 +83,7 @@ export async function updateLaundry(
 ): Promise<Laundry | undefined> {
   return getClient(context)
     .update(laundries)
-    .set({ running: laundry.running })
+    .set({ running: laundry.running, updatedAt: new Date() })
     .where(eq(laundries.id, laundry.id))
     .returning()
     .get();
