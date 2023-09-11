@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "lint": "eslint ./app",
     "lint-run": "eslint --fix ./app",
-    "test": "vitest"
+    "test": "vitest",
+    "db:seed": "wrangler d1 execute washboard --file ./app/db/seed.sqlite --local"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
