@@ -11,6 +11,7 @@
     "lint": "eslint ./app",
     "lint-run": "eslint --fix ./app",
     "test": "vitest",
+    "db:migrate": "wrangler d1 migrations apply washboard --local",
     "db:seed": "wrangler d1 execute washboard --file ./app/db/seed.sqlite --local"
   },
   "dependencies": {
