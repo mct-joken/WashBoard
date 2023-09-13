@@ -1,4 +1,5 @@
-import React, {createContext, useEffect, useState} from "react"
+import type {ReactNode} from "react";
+import { createContext, useEffect, useState} from "react"
 import {
     logoutFirebase,
     onAuthStateHasChanged,
@@ -17,10 +18,10 @@ const initialState: Pick<AuthStateContext, 'status' | 'userId'> = {
     userId: 'null'
 }
 
-export const AuthContext = createContext({} as AuthStateContext)
+export const AuthContext = createContext(initialState as AuthStateContext)
 
 interface IElement {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 export const AuthProvider = ({children}: IElement) => {
