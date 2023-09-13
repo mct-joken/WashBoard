@@ -1,6 +1,10 @@
 import { useSWEffect } from "@remix-pwa/sw";
-import type { LinksFunction } from "@remix-run/cloudflare";
-
+import {
+  json,
+  type LinksFunction,
+  type LoaderArgs,
+} from "@remix-run/cloudflare";
+import { FirebaseOptions, initializeApp } from "firebase/app";
 import {
   Links,
   LiveReload,
@@ -8,6 +12,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import stylesheet from "~/tailwind.css";
 
@@ -16,8 +21,27 @@ export const links: LinksFunction = () => [
   { rel: "manifest", href: "/resources.manifest.webmanifest" },
 ];
 
+export const loader = ({ context }: LoaderArgs) => {
+  const env = context.env as Env;
+
+  const firebaseOptions: FirebaseOptions = {
+    apiKey: env.FIREBASE_API_KEY,
+    authDomain: env.FIREBASE_AUTH_DOMAIN,
+    projectId: env.FIREBASE_PROJECT_ID,
+    storageBucket: env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: env.FIREBASE_APP_ID,
+  };
+
+  return json({ env, firebaseOptions });
+};
+
 export default function App() {
+  const { env, firebaseOptions } = useLoaderData<typeof loader>();
+
   useSWEffect();
+  initializeApp(firebaseOptions);
+
   return (
     <html lang="en">
       <head>
