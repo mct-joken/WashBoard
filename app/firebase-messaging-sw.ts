@@ -17,10 +17,10 @@ onBackgroundMessage(messaging, async (payload: MessagePayload) => {
   console.log("Received background message", payload);
   const title = payload.notification?.title || "";
   const options: NotificationOptions = {
-    body: payload.notification?.body + "wha!!!!!!!!!!!!" ?? "",
+    body: payload.notification?.body ?? "",
     silent: false,
   };
 
-  const sw = this as unknown as ServiceWorkerGlobalScope;
+  const sw = self as unknown as ServiceWorkerGlobalScope;
   await sw.registration.showNotification(title, options);
 });
