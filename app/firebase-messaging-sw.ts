@@ -12,15 +12,3 @@ const firebaseApp = initializeApp({
 });
 
 const messaging = getMessaging(firebaseApp);
-
-onBackgroundMessage(messaging, async (payload: MessagePayload) => {
-  console.log("Received background message", payload);
-  const title = payload.notification?.title || "";
-  const options: NotificationOptions = {
-    body: payload.notification?.body ?? "",
-    silent: false,
-  };
-
-  const sw = self as unknown as ServiceWorkerGlobalScope;
-  await sw.registration.showNotification(title, options);
-});
