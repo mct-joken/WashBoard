@@ -11,11 +11,11 @@ import { AuthProvider } from "./context/authContext";
 
 startTransition(() => {
   hydrateRoot(
-      document,
-      <StrictMode>
-        <AuthProvider>
-          <RemixBrowser />
-        </AuthProvider>
-      </StrictMode>
+    document,
+    <StrictMode>
+      <AuthProvider>
+        <RemixBrowser />
+      </AuthProvider>
+    </StrictMode>
   );
 });
