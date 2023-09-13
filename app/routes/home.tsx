@@ -9,17 +9,16 @@ import { LoaderArgs } from "@remix-run/cloudflare";
 import { getLaundries } from "~/models/laundry.server";
 import { laundries } from "~/db/schema";
 
-
 //この辺でデータとか取ってきて自分の使用状況たしかめる
 const ngmsg = "なし";
 let okmsg = "使用中";
 
 export const loader = async ({ context }: LoaderArgs) => {
   const laundries = await getLaundries(context);
-  return json({laundries})
-}
+  return json({ laundries });
+};
 
-const msg = () => {
+const is_use = () => {
   if (true) {
     return (
       <div>
@@ -66,7 +65,7 @@ const datas = [
     label: "5棟3階",
     num: 1,
     empty: 1,
-  },  
+  },
   {
     label: "6棟1階",
     num: 1,
@@ -80,7 +79,7 @@ const datas = [
 ];
 
 
-export function showdata(selectdata: string) {
+export function show_select_data(selectdata: string) {
   return datas.map((element) => {
     if (selectdata == "empty" && element.empty == 1) {
       return (
@@ -131,6 +130,7 @@ export function showdata(selectdata: string) {
     } else return <></>;
   });
 }
+//セレクトボックスのデータをセット
 export function setdata(value: string) {
   let selectdata = value;
   return selectdata;
@@ -141,7 +141,7 @@ export default function home() {
   const dataChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setdata(e.target.value);
   };
-  const { laundries } = useLoaderData<typeof loader> ();
+  const { laundries } = useLoaderData<typeof loader>();
   return (
     <div className=" mt-2 mx-3">
       <div className="flex flex-row">
@@ -165,11 +165,11 @@ export default function home() {
       </div>
       <p className="border rounded mx-10"></p>
       <div className=" max-h-72 mx-5 px-5 my-5  overflow-y-auto">
-        {showdata(data)}
+        {show_select_data(data)}
       </div>
       <p className="border rounded mx-10"></p>
       <p className="text-center mb-5">あなたの利用状況</p>
-      {msg()}
+      {is_use()}
       <Menu />
     </div>
   );
