@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { MessagePayload } from "firebase/messaging";
-import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
+import { getMessaging } from "firebase/messaging/sw";
 
 const firebaseApp = initializeApp({
   apiKey: "AIzaSyBU8z5V0a0ENcje-qpAdCjTAJZOVVHkxxY",
