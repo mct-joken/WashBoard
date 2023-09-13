@@ -1,3 +1,4 @@
+import { useSWEffect } from "@remix-pwa/sw";
 import type { LinksFunction } from "@remix-run/cloudflare";
 
 import {
@@ -12,9 +13,11 @@ import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  { rel: "manifest", href: "/resources.manifest.webmanifest" },
 ];
 
 export default function App() {
+  useSWEffect();
   return (
     <html lang="en">
       <head>
