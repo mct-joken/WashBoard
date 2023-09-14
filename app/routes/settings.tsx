@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Header } from "../components/header";
-import account from "../../public/account_box_FILL0_wght400_GRAD0_opsz48.png";
-import notify from "../../public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
+import { Header } from "~/components/header";
+import account from "public/account_box_FILL0_wght400_GRAD0_opsz48.png";
+import notify from "public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
+import Menu from "~/components/menu";
 
 export default function Setting() {
   // メールアドレス表示は一時的にこうします。
@@ -148,6 +149,7 @@ export default function Setting() {
           </div>
         </section>
       </main>
+      <Menu />
     </div>
   );
 }

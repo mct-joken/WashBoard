@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import Menu from "./menu";
+import Menu from "~/components/menu";
 import { AuthContext } from "~/context/authContext";
 import { Login } from "~/components/login";
 const Wash = () => {

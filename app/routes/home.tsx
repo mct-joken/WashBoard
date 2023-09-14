@@ -1,5 +1,5 @@
 // home.tsx
-import Menu from "./menu";
+import Menu from "~/components/menu";
 const Home = () => {
   return (
     <div>
