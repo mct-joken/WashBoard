@@ -4,16 +4,16 @@ import type { LoaderFunction } from "@remix-run/cloudflare";
 export let loader: LoaderFunction = async () => {
   return json(
     {
-      short_name: "PWA",
-      name: "Remix PWA",
-      start_url: "/",
+      short_name: "Washboard",
+      name: "Washboard",
+      start_url: "/home",
       display: "standalone",
       background_color: "#d3d7dd",
-      theme_color: "#c34138",
+      theme_color: "#3069f0",
       shortcuts: [
         {
           name: "Homepage",
-          url: "/",
+          url: "/home",
           icons: [
             {
               src: "/icons/android-icon-96x96.png",
@@ -68,6 +68,6 @@ export let loader: LoaderFunction = async () => {
         "Cache-Control": "public, max-age=600",
         "Content-Type": "application/manifest+json",
       },
-    },
+    }
   );
 };
