@@ -4,7 +4,7 @@ import {
   logoutFirebase,
   onAuthStateHasChanged,
   signInWithGoogle,
-} from "~/firebase/services";
+} from "~/firebase/authServices.client";
 
 export interface AuthStateContext {
   userId: string | null;
@@ -27,7 +27,7 @@ interface IElement {
 export const AuthProvider = ({ children }: IElement) => {
   const [session, setSession] = useState(initialState);
   useEffect(() => {
-    onAuthStateHasChanged(setSession);
+    return onAuthStateHasChanged(setSession);
   }, []);
   const handleLogOut = async () => {
     logoutFirebase();

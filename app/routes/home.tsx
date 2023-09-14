@@ -1,6 +1,5 @@
 // home.tsx
-import React from "react";
-import Menu from "./menu";
+import Menu from "~/components/menu";
 const Home = () => {
   return (
     <div>

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "~/context/authContext";
-import Google from "../../public/google.png";
+import Google from "public/google.png";
 
 export const Login = () => {
   const { handleLoginWithGoogle } = useContext(AuthContext);
