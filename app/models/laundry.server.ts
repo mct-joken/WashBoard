@@ -1,12 +1,17 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
+import { makeAlias } from "~/utils/makeAlias";
 
 const laundryWithRoomFields = {
-  ...laundries._.columns,
-  room: rooms._.columns,
+  ...getTableColumns(laundries),
+  room: {
+    id: makeAlias(rooms.id),
+    place: makeAlias(rooms.place),
+    createdAt: makeAlias(rooms.createdAt),
+    updatedAt: makeAlias(rooms.updatedAt),
+  },
 };
 
 type LaundryWithRoom = Omit<Laundry & { room: Room | null }, "roomId">;
@@ -54,11 +59,32 @@ export async function createLaundry(
   context: AppLoadContext,
   roomId: Laundry["roomId"]
 ): Promise<Laundry | undefined> {
-  const newLaundry: NewLaundry = { id: cuid(), roomId };
+  const newLaundry: NewLaundry = { roomId };
 
   return getClient(context)
     .insert(laundries)
     .values(newLaundry)
+    .returning()
+    .get();
+}
+
+/**
+ * `laundries`テーブルの`id`が合致する`Laundry`を更新する
+ * @param context `loader`関数で渡される`context`
+ * @param laundry 更新する`Laundry`
+ * @returns 更新された`Laundry`
+ */
+export async function updateLaundry(
+  context: AppLoadContext,
+  laundry: {
+    id: Laundry["id"];
+    running: Laundry["running"];
+  }
+): Promise<Laundry | undefined> {
+  return getClient(context)
+    .update(laundries)
+    .set({ running: laundry.running, updatedAt: new Date() })
+    .where(eq(laundries.id, laundry.id))
     .returning()
     .get();
 }

@@ -1,6 +1,5 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
 import { eq } from "drizzle-orm";
-import cuid from "cuid";
 import { getClient } from "~/db/client.server";
 import { Account, NewAccount, accounts } from "~/db/schema";
 
@@ -59,7 +58,7 @@ export async function createAccount(
   email: Account["email"],
   role: Account["role"] = null
 ): Promise<Account> {
-  const newAccount: NewAccount = { id: cuid(), email, role };
+  const newAccount: NewAccount = { email, role };
 
   return getClient(context)
     .insert(accounts)

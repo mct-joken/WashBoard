@@ -1,6 +1,5 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import cuid from "cuid";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
   Account,
@@ -11,11 +10,24 @@ import {
   laundries,
   useHistories,
 } from "~/db/schema";
+import { makeAlias } from "~/utils/makeAlias";
 
 const useHistoryWithAccountLaundryFields = {
-  ...useHistories._.columns,
-  account: accounts._.columns,
-  laundry: laundries._.columns,
+  ...getTableColumns(useHistories),
+  account: {
+    id: makeAlias(accounts.id),
+    email: makeAlias(accounts.email),
+    role: makeAlias(accounts.role),
+    createdAt: makeAlias(accounts.createdAt),
+    updatedAt: makeAlias(accounts.updatedAt),
+  },
+  laundry: {
+    id: makeAlias(laundries.id),
+    roomId: makeAlias(laundries.roomId),
+    running: makeAlias(laundries.running),
+    createdAt: makeAlias(laundries.createdAt),
+    updatedAt: makeAlias(laundries.updatedAt),
+  },
 };
 
 type UseHistoryWithAccountLaundry = Omit<
@@ -111,7 +123,6 @@ export async function createUseHistory(
   endAt: UseHistory["endAt"]
 ): Promise<UseHistory | undefined> {
   const newUseHistory: NewUseHistory = {
-    id: cuid(),
     accountId,
     laundryId,
     startAt,

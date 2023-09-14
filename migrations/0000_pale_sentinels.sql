@@ -12,7 +12,7 @@ CREATE TABLE `laundries` (
 	`running` integer DEFAULT false,
 	`createdAt` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updatedAt` integer,
-	FOREIGN KEY (`roomId`) REFERENCES `rooms`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`roomId`) REFERENCES `rooms`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE `rooms` (
@@ -30,8 +30,8 @@ CREATE TABLE `useHistories` (
 	`endAt` integer NOT NULL,
 	`createdAt` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updatedAt` integer,
-	FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`laundryId`) REFERENCES `laundries`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON UPDATE cascade ON DELETE cascade,
+	FOREIGN KEY (`laundryId`) REFERENCES `laundries`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE `uses` (
@@ -40,8 +40,8 @@ CREATE TABLE `uses` (
 	`laundryId` text,
 	`createdAt` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updatedAt` integer,
-	FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`laundryId`) REFERENCES `laundries`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON UPDATE cascade ON DELETE cascade,
+	FOREIGN KEY (`laundryId`) REFERENCES `laundries`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE UNIQUE INDEX `accounts_email_unique` ON `accounts` (`email`);

@@ -1,0 +1,28 @@
+INSERT INTO accounts(id, email, role) VALUES
+('IMzzwO0CP60q7glLLMVGV', 'admin@example.com', 2),
+('_GqDKdE6e0Pa6g5gBwJNz', 'alice@example.com', 1),
+('4SPqZwXgg_u0QcJK81BTJ', 'betty@example.com', 1);
+
+INSERT INTO rooms(id, place) VALUES
+('OFwRlJW0cGCUirj0S1sCh', '4号館2階'),
+('KCKsIRY4V0HcyGNovB1Cq', '5号館3階'),
+('CxkPvg5hEe5pbH9R5gSfk', '7号館1階');
+
+INSERT INTO laundries(id, roomId) VALUES
+('-oIL7Pi2-lqdNKf2TsMXo', 'OFwRlJW0cGCUirj0S1sCh'),
+('rY_8eWdxLX3GLS9Z2HChr', 'KCKsIRY4V0HcyGNovB1Cq'),
+('2OUBTjiN9aJyTIJpqfdRc', 'KCKsIRY4V0HcyGNovB1Cq');
+
+INSERT INTO useHistories(id, accountId, laundryId, startAt, endAt) VALUES
+(
+  'L7YkePxTeRkAPh8JdwO3X', '_GqDKdE6e0Pa6g5gBwJNz', 'rY_8eWdxLX3GLS9Z2HChr',
+  datetime('2023-09-09 12:34:56'), datetime('2023-09-09 13:01:23')
+),
+(
+  'uWUhJ98QJJkkOoefCeg-q', '_GqDKdE6e0Pa6g5gBwJNz', '2OUBTjiN9aJyTIJpqfdRc',
+  datetime('2023-09-10 10:23:45'), datetime('2023-09-09 10:45:08')
+),
+(
+  'xAjZpVc58xzYzTfWUWyMA', '4SPqZwXgg_u0QcJK81BTJ', '-oIL7Pi2-lqdNKf2TsMXo',
+  datetime('2023-09-10 17:12:34'), datetime('2023-09-09 17:55:21')
+);
