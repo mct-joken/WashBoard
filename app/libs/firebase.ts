@@ -1,5 +1,11 @@
 import { getApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import {
+  MessagePayload,
+  Unsubscribe,
+  getMessaging,
+  getToken,
+  onMessage,
+} from "firebase/messaging";
 
 export const requestToken = async (vapidServerKey: string) => {
   const app = getApp();
@@ -16,12 +22,10 @@ export const requestToken = async (vapidServerKey: string) => {
   }
 };
 
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    const app = getApp();
-    const messaging = getMessaging(app);
-    onMessage(messaging, (payload) => {
-      console.log("payload", payload);
-      resolve(payload);
-    });
-  });
+export const onMessageListener = (
+  onListen: (payload: MessagePayload) => void,
+): Unsubscribe => {
+  const app = getApp();
+  const messaging = getMessaging(app);
+  return onMessage(messaging, onListen);
+};

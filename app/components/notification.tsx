@@ -1,4 +1,3 @@
-import { MessagePayload } from "firebase/messaging";
 import { useEffect, useState } from "react";
 import { onMessageListener, requestToken } from "~/libs/firebase";
 
@@ -12,16 +11,13 @@ const Notification = (props: { env: Env }) => {
   useEffect(() => {
     (async () => {
       await requestToken(env.FIREBASE_VAPID_SERVER_KEY);
-      onMessageListener()
-        .then((_payload) => {
-          const payload = _payload as MessagePayload;
-          setNotification({
-            title: payload?.notification?.title,
-            body: payload?.notification?.body,
-          });
-        })
-        .catch((err) => console.log(`failed: ${err}`));
     })();
+    return onMessageListener((payload) => {
+      setNotification({
+        title: payload?.notification?.title,
+        body: payload?.notification?.body,
+      });
+    });
   }, []);
 
   useEffect(() => {
