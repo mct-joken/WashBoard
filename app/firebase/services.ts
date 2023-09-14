@@ -2,6 +2,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  Unsubscribe,
 } from "firebase/auth";
 import { FirebaseAuth } from "./config";
 import React from "react";
@@ -21,11 +22,12 @@ export const signInWithGoogle = async () => {
 };
 type StateDispatch = React.Dispatch<React.SetStateAction<any>>;
 
-export const onAuthStateHasChanged = (setSession: StateDispatch) => {
-  onAuthStateChanged(FirebaseAuth, (user) => {
+export const onAuthStateHasChanged = (setSession: StateDispatch): Unsubscribe => {
+  const unsubscribe = onAuthStateChanged(FirebaseAuth, (user) => {
     if (!user) return setSession({ status: "no-authenticated", userId: null });
     setSession({ status: "authenticated", userId: user!.uid });
   });
+  return unsubscribe;
 };
 
 export const logoutFirebase = async () => await FirebaseAuth.signOut();
