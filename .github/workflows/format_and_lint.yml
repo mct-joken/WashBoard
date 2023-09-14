@@ -1,9 +1,10 @@
-name: Format and List
+name: Format and Lint
 
 on:
   pull_request:
     types:
       - opened
+      - edited
 
 jobs:
   format_and_lint:
@@ -22,7 +23,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 18
+          version: 8
           
       - name: Install Dependencies
         run: pnpm install

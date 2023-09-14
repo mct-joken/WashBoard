@@ -18,6 +18,8 @@ const Notification = (props: { env: Env }) => {
         body: payload?.notification?.body,
       });
     });
+    // `env.FIREBASE_VAPID_SERVER_KEY`は環境変数であり, 変化することはないためdepsから除外
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
