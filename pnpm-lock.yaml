@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@firebase/auth':
+    specifier: ^1.3.0
+    version: 1.3.0(@firebase/app@0.9.18)
   '@prisma/client':
     specifier: ^5.1.1
     version: 5.1.1
