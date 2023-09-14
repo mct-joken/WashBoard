@@ -1,4 +1,3 @@
-import { getApp } from "firebase/app";
 import {
   MessagePayload,
   Unsubscribe,
@@ -8,8 +7,7 @@ import {
 } from "firebase/messaging";
 
 export const requestToken = async (vapidServerKey: string) => {
-  const app = getApp();
-  const messaging = getMessaging(app);
+  const messaging = getMessaging();
   try {
     const token = await getToken(messaging, { vapidKey: vapidServerKey });
     if (token) {
@@ -25,7 +23,6 @@ export const requestToken = async (vapidServerKey: string) => {
 export const onMessageListener = (
   onListen: (payload: MessagePayload) => void,
 ): Unsubscribe => {
-  const app = getApp();
-  const messaging = getMessaging(app);
+  const messaging = getMessaging();
   return onMessage(messaging, onListen);
 };

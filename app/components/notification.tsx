@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { onMessageListener, requestToken } from "~/libs/firebase";
+import { onMessageListener, requestToken } from "~/firebase/messageServices.client";
 
 const Notification = (props: { env: Env }) => {
   const { env } = props;
