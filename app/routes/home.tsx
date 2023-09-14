@@ -1,8 +1,8 @@
+import React from "react";
 import Logo from "../../public/images/logo.png";
 import styles from "../tailwind.css";
 import { json, LinksFunction } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
-
 import { useState } from "react";
 import Menu from "./menu";
 import { LoaderArgs } from "@remix-run/cloudflare";
