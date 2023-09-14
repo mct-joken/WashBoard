@@ -34,9 +34,6 @@ export default function Index() {
             Remix Docs
           </a>
         </li>
-      
-          
-      
       </ul>
     </div>
   );
