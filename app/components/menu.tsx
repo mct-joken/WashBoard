@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-
-import { Link, Outlet, useLoaderData, useLocation } from "@remix-run/react";
-import { IconContext } from "react-icons";
+import { Link, useLocation } from "@remix-run/react";
 import {
   MdHomeFilled,
   MdOutlineLocalLaundryService,
   MdOutlineSettings,
 } from "react-icons/md";
+
 export default function Menu() {
   const location = useLocation(); // pathの取得
   const { pathname } = location;
