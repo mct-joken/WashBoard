@@ -16,7 +16,9 @@
     "build:message-worker": "esbuild ./app/firebase-messaging-sw.ts --outfile=./public/firebase-messaging-sw.js --minify --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"production\"'",
     "dev:remix": "cross-env NODE_ENV=development remix dev --manual -c \"npm run start\"",
     "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
-    "dev:message-worker": "esbuild ./app/firebase-messaging-sw.ts --outfile=./public/firebase-messaging-sw.js --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+    "dev:message-worker": "esbuild ./app/firebase-messaging-sw.ts --outfile=./public/firebase-messaging-sw.js --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
+    "db:migrate": "wrangler d1 migrations apply washboard --local",
+    "db:seed": "wrangler d1 execute washboard --file ./app/db/seed.sqlite --local"
   },
   "dependencies": {
     "@firebase/auth": "^1.3.0",
