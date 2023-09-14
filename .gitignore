@@ -10,3 +10,6 @@ node_modules
 
 /.wrangler
 wrangler.toml
+
+/public/entry.worker.js
+/public/firebase-messaging-sw.js
