@@ -18,6 +18,7 @@ const useWithAccountLaundryFields = {
     id: makeAlias(accounts.id),
     email: makeAlias(accounts.email),
     role: makeAlias(accounts.role),
+    messageToken: makeAlias(accounts.messageToken),
     createdAt: makeAlias(accounts.createdAt),
     updatedAt: makeAlias(accounts.updatedAt),
   },
