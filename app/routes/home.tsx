@@ -1,6 +1,5 @@
 import React from "react";
 import Logo from "../../public/images/logo.png";
-import styles from "../tailwind.css";
 import { json, LinksFunction } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
@@ -8,14 +7,17 @@ import Menu from "~/components/menu";
 import { LoaderArgs } from "@remix-run/cloudflare";
 import { getLaundries } from "~/models/laundry.server";
 import { laundries } from "~/db/schema";
+import { getRooms } from "~/models/room.server";
 
 //この辺でデータとか取ってきて自分の使用状況たしかめる
 const ngmsg = "なし";
 let okmsg = "使用中";
 
+
 export const loader = async ({ context }: LoaderArgs) => {
+  const rooms = await getRooms(context);
   const laundries = await getLaundries(context);
-  return json({ laundries });
+  return json({ rooms,laundries });
 };
 
 const is_use = () => {
@@ -23,6 +25,7 @@ const is_use = () => {
     return (
       <div>
         <p className="text-center mb-5">{okmsg}</p>
+        <p className="text-center"></p>
         <Link to="/wash">
           <div className="flex justify-center items-center">
             <p
@@ -39,49 +42,13 @@ const is_use = () => {
     return <p className="text-center mb-5">{ngmsg}</p>;
   }
 };
-//仮データ
-const datas = [
-  {
-    label: "4棟2階",
-    num: 2,
-    empty: 0,
-  },
-  {
-    label: "4棟3階",
-    num: 2,
-    empty: 0,
-  },
-  {
-    label: "5棟1階",
-    num: 1,
-    empty: 1,
-  },
-  {
-    label: "5棟2階",
-    num: 2,
-    empty: 0,
-  },
-  {
-    label: "5棟3階",
-    num: 1,
-    empty: 1,
-  },
-  {
-    label: "6棟1階",
-    num: 1,
-    empty: 1,
-  },
-  {
-    label: "6棟2階",
-    num: 1,
-    empty: 0,
-  },
-];
 
 
-export function show_select_data(selectdata: string) {
-  return datas.map((element) => {
-    if (selectdata == "empty" && element.empty == 1) {
+export function show_select_data(selectdata: string,is_empty: boolean) {
+  const { rooms } = useLoaderData<typeof loader>();
+  const { laundries } = useLoaderData<typeof loader>();
+  return rooms.map((element) => {
+    if (selectdata == "empty" && is_empty) {
       return (
         <div className="flex flex-row justify-center my-2.5 ">
           <div className=" rounded-full bg-blue-400 active:bg-blue-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
@@ -89,15 +56,15 @@ export function show_select_data(selectdata: string) {
           </div>
 
           <div className=" text-20 mr-2 text-lg">
-            <p>{element.label}</p>
+            <p>{element.place}</p>
           </div>
           <div className=" text-20 mr-2 text-lg">
-            <p>{element.num}</p>
+            <p>{/*空いている数を表示*/}</p>
           </div>
         </div>
       );
     } else if (selectdata == "all") {
-      if (element.empty == 0) {
+      if ({/*is_emptyがfalseなら*/}) {
         return (
           <div className="flex flex-row justify-center my-2.5 ">
             <div className=" rounded-full bg-red-400 active:bg-red-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
@@ -105,10 +72,10 @@ export function show_select_data(selectdata: string) {
             </div>
 
             <div className=" text-20 mr-2 text-lg">
-              <p>{element.label}</p>
+              <p>{element.place}</p>
             </div>
             <div className=" text-20 mr-2 text-lg">
-              <p>{element.num}</p>
+              <p>{/*空いている数を表示*/}</p>
             </div>
           </div>
         );
@@ -119,10 +86,10 @@ export function show_select_data(selectdata: string) {
               空
             </div>
             <div className=" text-20 mr-2 text-lg">
-              <p>{element.label}</p>
+              <p>{element.place}</p>
             </div>
             <div className=" text-20 mr-2 text-lg">
-              <p>{element.num}</p>
+              <p>{/*空いている数を表示*/}</p>
             </div>
           </div>
         );
@@ -141,9 +108,8 @@ export default function home() {
   const dataChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setdata(e.target.value);
   };
-  const { laundries } = useLoaderData<typeof loader>();
   return (
-    <div className=" mt-2 mx-3">
+    <main className=" mt-2 mx-3">
       <div className="flex flex-row">
         <img src={Logo} alt="ロゴ" className=" h-10 mx-center my-auto"></img>
         <p className=" text-2xl  mx-auto my-auto">利用状況</p>
@@ -153,7 +119,7 @@ export default function home() {
           <form>
             <div>
               <select name="sort" id="sort" onChange={dataChange}>
-                <option value="all" selected>
+                <option defaultValue="all" >
                   すべて
                 </option>
                 <option value="empty">空きあり</option>
@@ -170,7 +136,8 @@ export default function home() {
       <p className="border rounded mx-10"></p>
       <p className="text-center mb-5">あなたの利用状況</p>
       {is_use()}
+      
       <Menu />
-    </div>
+    </main>
   );
 }
