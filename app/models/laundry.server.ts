@@ -78,13 +78,14 @@ export async function updateLaundry(
   context: AppLoadContext,
   laundry: {
     id: Laundry["id"];
-    running: Laundry["running"];
+    running?: Laundry["running"];
   }
 ): Promise<Laundry | undefined> {
+  const { id, running } = laundry;
   return getClient(context)
     .update(laundries)
-    .set({ running: laundry.running, updatedAt: new Date() })
-    .where(eq(laundries.id, laundry.id))
+    .set({ running, updatedAt: new Date() })
+    .where(eq(laundries.id, id))
     .returning()
     .get();
 }
