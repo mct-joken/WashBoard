@@ -68,6 +68,30 @@ export async function createAccount(
 }
 
 /**
+ * `accounts`テーブルの`id`が合致する`Account`を更新する
+ * @param context `loader`関数で渡される`context`
+ * @param account 更新する`Account`
+ * @returns 更新された`Account`
+ */
+export async function updateAccount(
+  context: AppLoadContext,
+  account: {
+    id: Account["id"];
+    email?: Account["email"];
+    role?: Account["role"];
+    messageToken?: Account["messageToken"];
+  }
+): Promise<Account | undefined> {
+  const { id, email, role, messageToken } = account;
+  return getClient(context)
+    .update(accounts)
+    .set({ email, role, messageToken, updatedAt: new Date() })
+    .where(eq(accounts.id, id))
+    .returning()
+    .get();
+}
+
+/**
  * `accounts`テーブルから`id`が合致する`Account`を削除する
  * @param context `loader`関数で渡される`context`
  * @param id 検索するid
