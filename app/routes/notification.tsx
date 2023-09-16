@@ -25,7 +25,7 @@ const NotificationTest = () => {
 
   const onSubscribe = async () => {
     const token = await requestToken(env.FIREBASE_VAPID_SERVER_KEY);
-    if (currentAccount?.messageToken === token) {
+    if (currentAccount?.messageToken === token || token === null) {
       return;
     }
 
