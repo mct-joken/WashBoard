@@ -32,7 +32,7 @@ export const onAuthStateHasChanged = (
     setSession({
       status: "authenticated",
       userId: user.uid,
-      email: user!.email,
+      email: user.email,
     });
   });
   return unsubscribe;
