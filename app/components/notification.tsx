@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { onMessageListener, requestToken } from "~/firebase/messageServices.client";
+import {
+  onMessageListener,
+  requestToken,
+} from "~/firebase/messageServices.client";
 
-const Notification = (props: { env: Env }) => {
+const NotificationHandler = (props: { env: Env }) => {
   const { env } = props;
   const [notification, setNotification] = useState<{
     title: string | undefined;
@@ -31,4 +34,4 @@ const Notification = (props: { env: Env }) => {
   return <></>;
 };
 
-export default Notification;
+export default NotificationHandler;

@@ -14,7 +14,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import Notification from "app/components/notification";
+import NotificationHandler from "app/components/notification";
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -56,7 +56,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <Notification env={env as Env} />
+        <NotificationHandler env={env as Env} />
       </body>
     </html>
   );
