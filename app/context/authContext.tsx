@@ -8,14 +8,16 @@ import {
 
 export interface AuthStateContext {
   userId: string | null;
+  email: string | null;
   status: "checking" | "authenticated" | "no-authenticated";
   handleLoginWithGoogle: () => Promise<void>;
   handleLogOut: () => Promise<void>;
 }
 
-const initialState: Pick<AuthStateContext, "status" | "userId"> = {
+const initialState: Pick<AuthStateContext, "status" | "userId" | "email"> = {
   status: "checking",
-  userId: "null",
+  userId: null,
+  email: null,
 };
 
 export const AuthContext = createContext(initialState as AuthStateContext);
@@ -31,19 +33,31 @@ export const AuthProvider = ({ children }: IElement) => {
   }, []);
   const handleLogOut = async () => {
     logoutFirebase();
-    setSession({ userId: null, status: "no-authenticated" });
+    setSession({ userId: null, email: null, status: "no-authenticated" });
   };
-  const validateAuth = (userId: string | undefined) => {
-    if (userId) return setSession({ userId, status: "authenticated" });
-    handleLogOut();
+
+  type User = {
+    uid: string | null;
+    email: string | null;
+  };
+  const validateAuth = (user: User | undefined) => {
+    if (user) {
+      setSession({
+        userId: user.uid,
+        email: user.email,
+        status: "authenticated",
+      });
+    } else {
+      handleLogOut();
+    }
   };
   const checking = () =>
     setSession((prev) => ({ ...prev, status: "checking" }));
 
   const handleLoginWithGoogle = async () => {
     checking();
-    const userId = await signInWithGoogle();
-    validateAuth(userId);
+    const user = await signInWithGoogle();
+    validateAuth(user);
   };
 
   return (

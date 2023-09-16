@@ -12,10 +12,7 @@ const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(getAuth(), googleProvider);
-
-    const { uid } = result.user;
-
-    return uid;
+    return result.user;
   } catch (e) {
     alert((e as Error).message);
   }
@@ -26,8 +23,17 @@ export const onAuthStateHasChanged = (
   setSession: StateDispatch
 ): Unsubscribe => {
   const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-    if (!user) return setSession({ status: "no-authenticated", userId: null });
-    setSession({ status: "authenticated", userId: user!.uid });
+    if (!user)
+      return setSession({
+        status: "no-authenticated",
+        userId: null,
+        email: null,
+      });
+    setSession({
+      status: "authenticated",
+      userId: user!.uid,
+      email: user!.email,
+    });
   });
   return unsubscribe;
 };
