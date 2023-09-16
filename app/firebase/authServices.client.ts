@@ -31,7 +31,7 @@ export const onAuthStateHasChanged = (
       });
     setSession({
       status: "authenticated",
-      userId: user!.uid,
+      userId: user.uid,
       email: user!.email,
     });
   });
