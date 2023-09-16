@@ -1,16 +1,25 @@
 import { ActionArgs, json } from "@remix-run/cloudflare";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
+import { formDataGetter } from "~/utils/formDataGetter";
+import { isString } from "~/utils/type";
 
 export const loader = () => null;
+
+export type NotificationSendAPI = {
+  to: string;
+  notificationTitle: string;
+  notificationBody: string;
+};
 
 export const action = async ({ request, context }: ActionArgs) => {
   const env = context.env as Env;
   const formData = await request.formData();
-  const to = formData.get("to");
-  const title = formData.get("notificationTitle");
-  const body = formData.get("notificationBody");
-  const isString = (value: any): value is string => typeof value === "string";
+  const get = formDataGetter<NotificationSendAPI>(formData);
+
+  const to = get("to");
+  const title = get("notificationTitle");
+  const body = get("notificationBody");
 
   if (!isString(to) || !isString(title) || !isString(body)) {
     return json({}, 400);
