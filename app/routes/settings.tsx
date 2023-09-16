@@ -90,8 +90,8 @@ export default function Setting() {
                     checked={notification}
                     onChange={handleNotificationChange}
                   />
-                  <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-sky-400"></div>
-                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-sky-50"></div>
+                  <div className="w-10 h-6 rounded-full shadow-inner bg-gray-400 peer-checked:bg-sky-400"></div>
+                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto bg-sky-50"></div>
                 </span>
               </label>
             </div>
@@ -106,8 +106,8 @@ export default function Setting() {
                     onChange={handleReminderChange}
                     disabled={!notification}
                   />
-                  <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-sky-400"></div>
-                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-sky-50"></div>
+                  <div className="w-10 h-6 rounded-full shadow-inner bg-gray-400 peer-checked:bg-sky-400"></div>
+                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto bg-sky-50"></div>
                 </span>
               </label>
             </div>
