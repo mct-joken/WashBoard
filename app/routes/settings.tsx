@@ -16,41 +16,27 @@ export default function Setting() {
   // https://remix.run/docs/en/1.19.3/guides/constraints#rendering-with-browser-only-apis
   useEffect(() => {
     const n = window.localStorage.getItem("notification");
-    const boolN = Boolean(n);
-    setNotification(boolN);
-
-    const r = window.localStorage.getItem("reminder");
-    const boolR = Boolean(r);
-    setReminder(boolR);
-
+    if (n === "true") {
+      setNotification(true);
+      const r = window.localStorage.getItem("reminder");
+      if (r === "true") setReminder(true);
+      else setReminder(false);
+    } else {
+      setNotification(false);
+      setReminder(false);
+    }
     const i = window.localStorage.getItem("reminderInterval");
     if (i) setReminderInterval(i);
     else setReminderInterval("3");
   }, []);
-
-  useEffect(() => {
-    if (notification) window.localStorage.setItem("notification", "true");
-    else {
-      window.localStorage.removeItem("notification");
-      setReminder(false);
-      window.localStorage.removeItem("reminder");
-    }
-  }, [notification]);
-
-  useEffect(() => {
-    if (reminder) window.localStorage.setItem("reminder", "true");
-    else window.localStorage.removeItem("reminder");
-  }, [reminder]);
-
-  useEffect(() => {
-    window.localStorage.setItem("reminderInterval", reminderInterval);
-  }, [reminderInterval]);
-
   const handleNotificationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNotification(e.target.checked);
+    window.localStorage.setItem("notification", e.target.checked.toString());
+    if (!e.target.checked) handleReminderChange(e);
   };
   const handleReminderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReminder(e.target.checked);
+    window.localStorage.setItem("reminder", e.target.checked.toString());
   };
   const handleReminderIntervalChange = (
     e: React.ChangeEvent<HTMLSelectElement>
