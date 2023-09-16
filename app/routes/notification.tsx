@@ -16,7 +16,7 @@ import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
 export const loader = async ({ context }: LoaderArgs) => {
   const env = context.env as Env;
-  const account = await getAccountByEmail(context, "alice@example.com");
+  const account = await getAccountByEmail("alice@example.com");
   if (account == null) {
     return redirect("/home");
   }

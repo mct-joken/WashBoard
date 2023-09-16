@@ -21,5 +21,5 @@ export const action = async ({ request, context }: ActionArgs) => {
     return null;
   }
 
-  return await updateAccount(context, { id: accountId, messageToken });
+  return await updateAccount({ id: accountId, messageToken });
 };
