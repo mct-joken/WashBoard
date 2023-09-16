@@ -10,11 +10,10 @@ export const action = async ({ request, context }: ActionArgs) => {
   const to = formData.get("to");
   const title = formData.get("notificationTitle");
   const body = formData.get("notificationBody");
-  console.log(to, title, body);
   const isString = (value: any): value is string => typeof value === "string";
 
   if (!isString(to) || !isString(title) || !isString(body)) {
-    return json(null, 400);
+    return json({}, 400);
   }
 
   const response = await pushMessage(
