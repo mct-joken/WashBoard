@@ -3,7 +3,7 @@ import { useZxing } from "react-zxing";
 import { Link } from "@remix-run/react";
 const id = "ID";
 
-const Home = () => {
+const Wash = () => {
 
   // QR読み込み用状態変数
   const [result, setResult] = useState('No result');
@@ -121,4 +121,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Wash;

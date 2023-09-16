@@ -2,7 +2,14 @@
 node_modules
 
 /.cache
-/functions/\[\[path\]\].js
-/functions/\[\[path\]\].js.map
+/functions
 /public/build
 .dev.vars
+.env
+.env.*
+
+/.wrangler
+wrangler.toml
+
+/public/entry.worker.js
+/public/firebase-messaging-sw.js
