@@ -16,6 +16,7 @@ import {
 } from "@remix-run/react";
 import NotificationHandler from "app/components/notification";
 import stylesheet from "~/tailwind.css";
+import { initializeClient } from "./db/client.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -24,6 +25,8 @@ export const links: LinksFunction = () => [
 
 export const loader = ({ context }: LoaderArgs) => {
   const env = context.env as Env;
+
+  initializeClient(context);
 
   const firebaseOptions: FirebaseOptions = {
     apiKey: env.FIREBASE_API_KEY,
