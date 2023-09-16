@@ -4,8 +4,15 @@ import { useEffect, useState } from "react";
 import Menu from "~/components/menu";
 import { requestToken } from "~/firebase/messageServices.client";
 import { getAccountByEmail } from "~/models/account.server";
-import { action as subscribeNotificationAction } from "~/routes/api.v1.notification.subscribe";
-import { action as sendNotificationAction } from "~/routes/api.v1.notification.send";
+import {
+  NotificationSubscribeAPI,
+  action as subscribeNotificationAction,
+} from "~/routes/api.v1.notification.subscribe";
+import {
+  NotificationSendAPI,
+  action as sendNotificationAction,
+} from "~/routes/api.v1.notification.send";
+import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
 export const loader = async ({ context }: LoaderArgs) => {
   const env = context.env as Env;
@@ -20,8 +27,18 @@ export const loader = async ({ context }: LoaderArgs) => {
 const NotificationTest = () => {
   const { env, account } = useLoaderData<typeof loader>();
   const [currentAccount, setCurrentAccount] = useState(account);
-  const setMessageToken = useFetcher<typeof subscribeNotificationAction>();
-  const sendNotification = useFetcher<typeof sendNotificationAction>();
+  const subscribeFetcher = useFetcher<typeof subscribeNotificationAction>();
+  const sendFetcher = useFetcher<typeof sendNotificationAction>();
+  const submitSubscribe = fetcherSubmitter<NotificationSubscribeAPI>(
+    subscribeFetcher,
+    "/api/v1/notification/subscribe",
+    "POST"
+  );
+  const submitSend = fetcherSubmitter<NotificationSendAPI>(
+    sendFetcher,
+    "/api/v1/notification/send",
+    "POST"
+  );
 
   const onSubscribe = async () => {
     const token = await requestToken(env.FIREBASE_VAPID_SERVER_KEY);
@@ -29,13 +46,10 @@ const NotificationTest = () => {
       return;
     }
 
-    setMessageToken.submit(
-      {
-        accountId: currentAccount.id,
-        messageToken: token,
-      },
-      { action: "/api/v1/notification/subscribe", method: "POST" }
-    );
+    submitSubscribe({
+      accountId: currentAccount.id,
+      messageToken: token,
+    });
   };
 
   const onSend = async () => {
@@ -43,24 +57,21 @@ const NotificationTest = () => {
       return;
     }
 
-    sendNotification.submit(
-      {
-        to: currentAccount.messageToken,
-        notificationTitle: "Test",
-        notificationBody: "Notification",
-      },
-      { action: "/api/v1/notification/send", method: "POST" }
-    );
+    submitSend({
+      to: currentAccount.messageToken,
+      notificationTitle: "Test",
+      notificationBody: "Notification",
+    });
   };
 
   useEffect(() => {
-    if (!setMessageToken.data) return;
-    setCurrentAccount(setMessageToken.data);
-  }, [setMessageToken.data]);
+    if (!subscribeFetcher.data) return;
+    setCurrentAccount(subscribeFetcher.data);
+  }, [subscribeFetcher.data]);
 
   useEffect(() => {
-    console.log(sendNotification.data);
-  }, [sendNotification.data]);
+    console.log(sendFetcher.data);
+  }, [sendFetcher.data]);
 
   return (
     <>
