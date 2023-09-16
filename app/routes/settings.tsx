@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Header } from "~/components/header";
 import account from "public/account_box_FILL0_wght400_GRAD0_opsz48.png";
 import notify from "public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
 import Menu from "~/components/menu";
+import { AuthContext } from "~/context/authContext";
 
 export default function Setting() {
   // メールアドレス表示は一時的にこうします。
-  const email = "j2000@matsue-ct.ac.jp";
-
+  const { email } = useContext(AuthContext);
   const [notification, setNotification] = useState(false);
   const [reminder, setReminder] = useState(false);
   const [reminderInterval, setReminderInterval] = useState<string>("");
