@@ -4,8 +4,7 @@ import {
   requestToken,
 } from "~/firebase/messageServices.client";
 
-const NotificationHandler = (props: { env: Env }) => {
-  const { env } = props;
+export const useNotification = (vapidServerKey: string) => {
   const [notification, setNotification] = useState<{
     title: string | undefined;
     body: string | undefined;
@@ -13,7 +12,7 @@ const NotificationHandler = (props: { env: Env }) => {
 
   useEffect(() => {
     (async () => {
-      await requestToken(env.FIREBASE_VAPID_SERVER_KEY);
+      await requestToken(vapidServerKey);
     })();
     return onMessageListener((payload) => {
       setNotification({
@@ -30,8 +29,6 @@ const NotificationHandler = (props: { env: Env }) => {
       alert(`title: ${notification.title}\nbody: ${notification.body}`);
     }
   }, [notification]);
-
-  return <></>;
 };
 
-export default NotificationHandler;
+export default Notification;
