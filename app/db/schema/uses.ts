@@ -3,6 +3,8 @@ import { accounts } from "./accounts";
 import { laundries } from "./laundries";
 import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { AliasedColumns } from "~/types/aliasedColumns";
+import { makeAlias } from "~/utils/makeAlias";
 
 export const uses = sqliteTable("uses", {
   id: text("id")
@@ -24,3 +26,10 @@ export const uses = sqliteTable("uses", {
 
 export type Use = InferSelectModel<typeof uses>;
 export type NewUse = InferInsertModel<typeof uses>;
+export const UseColumns: AliasedColumns<Use> = {
+  id: makeAlias(uses.id),
+  accountId: makeAlias(uses.accountId),
+  createdAt: makeAlias(uses.createdAt),
+  updatedAt: makeAlias(uses.updatedAt),
+  laundryId: makeAlias(uses.laundryId),
+};
