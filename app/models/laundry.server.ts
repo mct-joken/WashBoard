@@ -1,17 +1,18 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import { eq, getTableColumns } from "drizzle-orm";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
-import { Laundry, NewLaundry, Room, laundries, rooms } from "~/db/schema";
-import { makeAlias } from "~/utils/makeAlias";
+import {
+  Laundry,
+  NewLaundry,
+  Room,
+  RoomColumns,
+  laundries,
+  rooms,
+} from "~/db/schema";
 
 const laundryWithRoomFields = {
   ...getTableColumns(laundries),
-  room: {
-    id: makeAlias(rooms.id),
-    place: makeAlias(rooms.place),
-    createdAt: makeAlias(rooms.createdAt),
-    updatedAt: makeAlias(rooms.updatedAt),
-  },
+  room: RoomColumns,
 };
 
 type LaundryWithRoom = Omit<Laundry & { room: Room | null }, "roomId">;
