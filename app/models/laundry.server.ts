@@ -1,5 +1,5 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
   Laundry,
