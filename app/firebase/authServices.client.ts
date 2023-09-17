@@ -1,11 +1,4 @@
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  Unsubscribe,
-  getAuth,
-} from "firebase/auth";
-import React from "react";
+import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -17,25 +10,5 @@ export const signInWithGoogle = async () => {
     alert((e as Error).message);
   }
 };
-type StateDispatch = React.Dispatch<React.SetStateAction<any>>;
 
-export const onAuthStateHasChanged = (
-  setSession: StateDispatch
-): Unsubscribe => {
-  const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-    if (!user)
-      return setSession({
-        status: "no-authenticated",
-        userId: null,
-        email: null,
-      });
-    setSession({
-      status: "authenticated",
-      userId: user.uid,
-      email: user.email,
-    });
-  });
-  return unsubscribe;
-};
-
-export const logoutFirebase = async () => await getAuth().signOut();
+export const signOutFirebase = async () => await getAuth().signOut();
