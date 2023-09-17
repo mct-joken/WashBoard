@@ -1,8 +1,15 @@
-import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
+import {
+  InferSelectModel,
+  InferInsertModel,
+  sql,
+  relations,
+} from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 import { AliasedColumns } from "~/types/aliasedColumns";
 import { makeAlias } from "~/utils/makeAlias";
+import { uses } from "./uses";
+import { useHistories } from "./useHistories";
 
 export const accounts = sqliteTable("accounts", {
   id: text("id")
@@ -15,6 +22,11 @@ export const accounts = sqliteTable("accounts", {
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
+
+export const accountsRelations = relations(accounts, ({ many }) => ({
+  uses: many(uses),
+  useHistories: many(useHistories),
+}));
 
 export type Account = InferSelectModel<typeof accounts>;
 export type NewAccount = InferInsertModel<typeof accounts>;

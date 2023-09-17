@@ -1,7 +1,12 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { accounts } from "./accounts";
 import { laundries } from "./laundries";
-import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
+import {
+  InferSelectModel,
+  InferInsertModel,
+  sql,
+  relations,
+} from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { AliasedColumns } from "~/types/aliasedColumns";
 import { makeAlias } from "~/utils/makeAlias";
@@ -23,6 +28,17 @@ export const uses = sqliteTable("uses", {
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
+
+export const usesRelations = relations(uses, ({ one }) => ({
+  account: one(accounts, {
+    fields: [uses.accountId],
+    references: [accounts.id],
+  }),
+  laundry: one(laundries, {
+    fields: [uses.laundryId],
+    references: [laundries.id],
+  }),
+}));
 
 export type Use = InferSelectModel<typeof uses>;
 export type NewUse = InferInsertModel<typeof uses>;
