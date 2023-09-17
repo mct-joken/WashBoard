@@ -3,6 +3,7 @@ import { eq, getTableColumns, sql } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
   Laundry,
+  LaundryColumns,
   NewLaundry,
   Room,
   RoomColumns,
@@ -11,7 +12,7 @@ import {
 } from "~/db/schema";
 
 const laundryWithRoomFields = {
-  ...getTableColumns(laundries),
+  ...LaundryColumns,
   room: RoomColumns,
 };
 
