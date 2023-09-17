@@ -69,10 +69,6 @@ const NotificationTest = () => {
     setCurrentAccount(subscribeFetcher.data);
   }, [subscribeFetcher.data]);
 
-  useEffect(() => {
-    console.log(sendFetcher.data);
-  }, [sendFetcher.data]);
-
   return (
     <>
       <div className="p-3">
