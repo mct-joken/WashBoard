@@ -2,9 +2,7 @@ name: Format and Lint
 
 on:
   pull_request:
-    types:
-      - opened
-      - edited
+    types: [opened, edited]
 
 jobs:
   format_and_lint:
