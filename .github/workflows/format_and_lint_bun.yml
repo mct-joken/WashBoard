@@ -6,7 +6,7 @@ on:
 
 jobs:
   format_and_lint:
-    name: Format and Lint Code
+    name: Format and Lint Code with bun
     runs-on: ubuntu-latest
 
     steps:
