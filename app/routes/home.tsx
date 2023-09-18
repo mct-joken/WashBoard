@@ -5,39 +5,35 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Menu from "~/components/menu";
 import { LoaderArgs } from "@remix-run/cloudflare";
-import { getLaundries } from "~/models/laundry.server";
-import { getRooms } from "~/models/room.server";
 import { getUseById } from "~/models/use.server";
+import { getClient } from "~/db/client.server";
+import { accounts, laundries, useHistories } from "~/db/schema";
 
 //この辺でデータとか取ってきて自分の使用状況たしかめる
+//contextはいずれ消えます
 const id = "IMzzwO0CP60q7glLLMVGV";
 export const loader = async ({ context }: LoaderArgs) => {
-  const rooms = await getRooms(context);
-  const laundries = await getLaundries(context);
-  const now_use = await getUseById(context, id);
-  return json({ rooms, laundries, now_use });
+  const rooms = await getClient(context).query.rooms.findMany({
+    with: { laundries: true },
+  });
+  //usingは仮
+  const  using= await getClient(context).query.accounts.findFirst({
+    where: (using,{eq})=>eq(accounts.id,"IMzzwO0CP60q7glLLMVGV"),
+    with:{
+      uses:true,
+    },
+  });
+  return json({ rooms, using });
 };
 
-export function ShowSelectData(selectdata: string) {
+export function ShowSelectData(filter: string) {
   const { rooms } = useLoaderData<typeof loader>();
-  const { laundries } = useLoaderData<typeof loader>();
-  let Unused: { [key: string]: number } = {};
-
+  //部屋情報の表示roomsからすべての部屋のデータを取ってきてるのでmapで表示
   return rooms.map((room) => {
-    let empty = true;
-    for (let i = 0; i < laundries.length; i++) {
-      const laundrie = laundries[i];
-      if (!Unused[room.place]) {
-        Unused[room.place] = 0;
-      }
-      if (!laundrie.running) {
-        Unused[room.place] += 1;
-      }
-      if (String(laundrie.room) !== room.place) {
-        break;
-      }
-    }
-    if (selectdata == "empty" && empty) {
+    //配下の洗濯機が動いているかの確認.1台でも空いていたらtrueになる
+    const runningLaundriesCount =room.laundries.length- room.laundries.filter((r) => r.running).length
+    let empty = runningLaundriesCount!=0
+    if (filter == "empty" && empty) {
       return (
         <div className="flex flex-row justify-center my-2.5 ">
           <div className=" rounded-full bg-blue-400 active:bg-blue-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
@@ -48,11 +44,11 @@ export function ShowSelectData(selectdata: string) {
             <p>{room.place}</p>
           </div>
           <div className=" text-20 mr-2 text-lg">
-            <p>{Unused[room.place]}</p>
+            <p>{runningLaundriesCount}台使用可</p>
           </div>
         </div>
       );
-    } else if (selectdata == "all") {
+    } else if (filter== "all") {
       if (empty) {
         return (
           <div className="flex flex-row justify-center my-2.5 ">
@@ -64,7 +60,7 @@ export function ShowSelectData(selectdata: string) {
               <p>{room.place}</p>
             </div>
             <div className=" text-20 mr-2 text-lg">
-              <p>{Unused[room.place]}</p>
+              <p>{runningLaundriesCount}台使用可</p>
             </div>
           </div>
         );
@@ -78,7 +74,7 @@ export function ShowSelectData(selectdata: string) {
               <p>{room.place}</p>
             </div>
             <div className=" text-20 mr-2 text-lg">
-              <p>{Unused[room.place]}</p>
+              <p>{runningLaundriesCount}台使用可</p>
             </div>
           </div>
         );
@@ -92,8 +88,8 @@ export default function Home() {
   const dataChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     SetFilter(e.target.value);
   };
-  const { now_use } = useLoaderData<typeof loader>();
-  console.log(now_use)
+  const { using } = useLoaderData<typeof loader>();
+  console.log(using?.uses);
   return (
     <main className=" mt-2 mx-3">
       <div className="flex flex-row">
@@ -121,7 +117,7 @@ export default function Home() {
       </div>
       <p className="border rounded mx-10"></p>
       <p className="text-center mb-5">あなたの利用状況</p>
-      {now_use != null ? (
+      {using?.uses == null ? (
         <div>
           <p className="text-center mb-5">使用中</p>
           <p className="text-center"></p>
