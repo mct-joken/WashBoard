@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 /**
  * 現在の認証状態をリッスンして返すフック
  * @param enableVerification 存在するAccountのログインのみ受け付けるか
- * @returns  \{`ready`: Firebase authの初期化が完了したか, `user`: ログイン中のユーザ \}
+ * @returns \{`ready`: Firebase authの初期化が完了したか, `user`: ログイン中のユーザ \}
  */
 export const useAuth = (
   enableVerification: boolean = false
