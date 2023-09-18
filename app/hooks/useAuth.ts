@@ -43,7 +43,7 @@ export const useAuth = (
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [auth]);
+  }, [auth, enableVerification]);
 
   return { ready, user };
 };
