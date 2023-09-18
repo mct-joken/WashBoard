@@ -1,5 +1,5 @@
 {
   "out": "./migrations",
-  "schema": "./app/db",
+  "schema": "./app/db/schema.ts",
   "breakpoints": false
 }
