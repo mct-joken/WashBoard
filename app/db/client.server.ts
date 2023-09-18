@@ -1,11 +1,12 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
 import { DrizzleD1Database, drizzle } from "drizzle-orm/d1";
+import * as schema from "./schema";
 
-type Client = { db?: DrizzleD1Database };
+type Client = { db?: DrizzleD1Database<typeof schema> };
 const _client: Client = { db: undefined };
 
 export const client = (database: D1Database) =>
-  drizzle(database, { logger: true });
+  drizzle(database, { schema, logger: true });
 
 /**
  * データベースの`client`がまだ初期化されていなければ初期化する
