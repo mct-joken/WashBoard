@@ -1,23 +1,16 @@
-import { useContext } from "react";
 import Menu from "~/components/menu";
-import { AuthContext } from "~/context/authContext";
 import { Login } from "~/components/login";
+import { useAuth } from "~/hooks/useAuth";
+
 const Wash = () => {
-  const { status, userId } = useContext(AuthContext);
-  if (status === "checking") return <div>Checking...</div>;
-  if (status === "authenticated" && userId) {
-    console.log("userId: ", userId);
-    console.log("status: ", status);
-    return (
-      <div>
-        <h1>Wash Page</h1>
-        <Menu />
-      </div>
-    );
+  const { ready, user } = useAuth();
+
+  if (!ready) {
+    return <>Checking...</>;
   }
   return (
     <>
-      <Login />
+      {user ? <h1>Wash Page</h1> : <Login />}
       <Menu />
     </>
   );
