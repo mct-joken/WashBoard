@@ -1,8 +1,9 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
 import { drizzle } from "drizzle-orm/d1";
+import * as schema from "./schema";
 
 export const client = (database: D1Database) =>
-  drizzle(database, { logger: true });
+  drizzle(database, { schema, logger: true });
 
 /**
  * データベースの`client`を作成する

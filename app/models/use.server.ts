@@ -1,34 +1,23 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
-import { eq, getTableColumns } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import {
   Account,
+  AccountColumns,
   Laundry,
+  LaundryColumns,
   NewUse,
   Use,
+  UseColumns,
   accounts,
   laundries,
   uses,
 } from "~/db/schema";
-import { makeAlias } from "~/utils/makeAlias";
 
 const useWithAccountLaundryFields = {
-  ...getTableColumns(uses),
-  account: {
-    id: makeAlias(accounts.id),
-    email: makeAlias(accounts.email),
-    role: makeAlias(accounts.role),
-    messageToken: makeAlias(accounts.messageToken),
-    createdAt: makeAlias(accounts.createdAt),
-    updatedAt: makeAlias(accounts.updatedAt),
-  },
-  laundry: {
-    id: makeAlias(laundries.id),
-    roomId: makeAlias(laundries.roomId),
-    running: makeAlias(laundries.running),
-    createdAt: makeAlias(laundries.createdAt),
-    updatedAt: makeAlias(laundries.updatedAt),
-  },
+  ...UseColumns,
+  account: AccountColumns,
+  laundry: LaundryColumns,
 };
 
 type UseWithAccountLaundry = Omit<
