@@ -9,7 +9,7 @@ type LaundryStatus = {
   running: boolean;
 };
 
-export const action = async ({ params, request, context }: ActionArgs) => {
+export const action = async ({ params, request }: ActionArgs) => {
   // `PUT`以外を許可しない
   if (request.method !== "PUT") {
     return new Response(null, { status: 405 });
@@ -21,7 +21,7 @@ export const action = async ({ params, request, context }: ActionArgs) => {
     return new Response(null, { status: 400 });
   }
 
-  if ((await getLaundryById(context, laundryId)) == null) {
+  if ((await getLaundryById(laundryId)) == null) {
     return new Response(null, { status: 404 });
   }
 
@@ -32,7 +32,7 @@ export const action = async ({ params, request, context }: ActionArgs) => {
 
   const laundryStatus: LaundryStatus = { running: body.status === "true" };
 
-  const result = await updateLaundry(context, {
+  const result = await updateLaundry({
     id: laundryId,
     running: laundryStatus.running,
   });

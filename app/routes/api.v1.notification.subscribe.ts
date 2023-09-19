@@ -10,7 +10,7 @@ export type NotificationSubscribeAPI = {
   messageToken: string;
 };
 
-export const action = async ({ request, context }: ActionArgs) => {
+export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const get = formDataGetter<NotificationSubscribeAPI>(formData);
 
@@ -21,5 +21,5 @@ export const action = async ({ request, context }: ActionArgs) => {
     return null;
   }
 
-  return await updateAccount(context, { id: accountId, messageToken });
+  return await updateAccount({ id: accountId, messageToken });
 };
