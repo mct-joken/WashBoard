@@ -17,6 +17,7 @@ export const accounts = sqliteTable("accounts", {
     .$defaultFn(() => nanoid()),
   email: text("email").notNull().unique(),
   role: integer("role", { mode: "number" }).default(1), // 1: User, 2: Admin
+  messageToken: text("messageToken"),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
