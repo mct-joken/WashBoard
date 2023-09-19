@@ -4,6 +4,8 @@ import { Link } from "@remix-run/react";
 import { Header } from "~/components/header";
 import Menu from "~/components/menu";
 import { start } from "repl";
+import { Login } from "~/components/login";
+import { useAuth } from "~/hooks/useAuth";
 import {
   GrCheckboxSelected,
   GrCheckbox
@@ -42,8 +44,11 @@ const Wash = () => {
     }
   }, [result])
 
+  const { ready, user } = useAuth();
+
   return (
     <div>
+
       {!start && (
 
         <div>

@@ -3,11 +3,10 @@ import { Header } from "~/components/header";
 import account from "public/account_box_FILL0_wght400_GRAD0_opsz48.png";
 import notify from "public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
 import Menu from "~/components/menu";
+import { useAuth } from "~/hooks/useAuth";
 
 export default function Setting() {
-  // メールアドレス表示は一時的にこうします。
-  const email = "j2000@matsue-ct.ac.jp";
-
+  const { user } = useAuth();
   const [notification, setNotification] = useState(false);
   const [reminder, setReminder] = useState(false);
   const [reminderInterval, setReminderInterval] = useState<string>("");
@@ -56,7 +55,7 @@ export default function Setting() {
           </div>
           <div className="ml-12">
             <p className="my-2">メールアドレス</p>
-            <p className="my-2">{email}</p>
+            <p className="my-2">{user?.email}</p>
           </div>
         </section>
         <hr />
