@@ -16,5 +16,6 @@ export const makeAlias = <TData>(
   const columnName = column.name;
   const tableName = getTableName(column.table);
   const fullName = `"${tableName}"."${columnName}"`;
-  return sql<TData>`${fullName}`.as(`__${tableName}_${columnName}`);
+  const uniqueName = `__${tableName}_${columnName}__`;
+  return new SQL.Aliased<TData>(sql.raw(fullName), uniqueName);
 };
