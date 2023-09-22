@@ -4,23 +4,19 @@ import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Menu from "~/components/menu";
-import { LoaderArgs } from "@remix-run/cloudflare";
-import { getUseById } from "~/models/use.server";
 import { getClient } from "~/db/client.server";
-import { accounts, laundries, useHistories } from "~/db/schema";
 
-//この辺でデータとか取ってきて自分の使用状況たしかめる
-//contextはいずれ消えます
+//DBから取得
 const id = "IMzzwO0CP60q7glLLMVGV";
-export const loader = async ({ context }: LoaderArgs) => {
-  const rooms = await getClient(context).query.rooms.findMany({
+export const loader = async () => {
+  const rooms = await getClient().query.rooms.findMany({
     with: { laundries: true },
   });
-  //usingは仮
-  const  using= await getClient(context).query.accounts.findFirst({
-    where: (using,{eq})=>eq(accounts.id,"IMzzwO0CP60q7glLLMVGV"),
-    with:{
-      uses:true,
+  //usingは仮　IDを取ってくる必要あり
+  const using = await getClient().query.uses.findFirst({
+    where: (use, { eq }) => eq(use.id, "IMzzwO0CP60q7glLLMVGV"),
+    with: {
+      laundry: true,
     },
   });
   return json({ rooms, using });
@@ -31,9 +27,10 @@ export function ShowSelectData(filter: string) {
   //部屋情報の表示roomsからすべての部屋のデータを取ってきてるのでmapで表示
   return rooms.map((room) => {
     //配下の洗濯機が動いているかの確認.1台でも空いていたらtrueになる
-    const runningLaundriesCount =room.laundries.length- room.laundries.filter((r) => r.running).length
-    let empty = runningLaundriesCount!=0
-    if (filter == "empty" && empty) {
+    const runningLaundriesCount =
+      room.laundries.length - room.laundries.filter((r) => r.running).length;
+    let empty = runningLaundriesCount != 0;
+    if (empty) {
       return (
         <div className="flex flex-row justify-center my-2.5 ">
           <div className=" rounded-full bg-blue-400 active:bg-blue-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
@@ -48,38 +45,21 @@ export function ShowSelectData(filter: string) {
           </div>
         </div>
       );
-    } else if (filter== "all") {
-      if (empty) {
-        return (
-          <div className="flex flex-row justify-center my-2.5 ">
-            <div className=" rounded-full bg-blue-400 active:bg-blue-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
-              空
-            </div>
-
-            <div className=" text-20 mr-2 text-lg">
-              <p>{room.place}</p>
-            </div>
-            <div className=" text-20 mr-2 text-lg">
-              <p>{runningLaundriesCount}台使用可</p>
-            </div>
+    } else if (filter == "all") {
+      return (
+        <div className="flex flex-row justify-center my-2.5 ">
+          <div className=" rounded-full bg-red-400 active:bg-red-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
+            満
           </div>
-        );
-      } else {
-        return (
-          <div className="flex flex-row justify-center my-2.5 ">
-            <div className=" rounded-full bg-red-400 active:bg-red-400  py-1 px-5 text-white mr-3 p-0 w-30 ">
-              満
-            </div>
-            <div className=" text-20 mr-2 text-lg">
-              <p>{room.place}</p>
-            </div>
-            <div className=" text-20 mr-2 text-lg">
-              <p>{runningLaundriesCount}台使用可</p>
-            </div>
+          <div className=" text-20 mr-2 text-lg">
+            <p>{room.place}</p>
           </div>
-        );
-      }
-    } else return <></>;
+          <div className=" text-20 mr-2 text-lg">
+            <p>{runningLaundriesCount}台使用可</p>
+          </div>
+        </div>
+      );
+    }
   });
 }
 
@@ -89,7 +69,7 @@ export default function Home() {
     SetFilter(e.target.value);
   };
   const { using } = useLoaderData<typeof loader>();
-  console.log(using?.uses);
+  console.log(using?.laundry);
   return (
     <main className=" mt-2 mx-3">
       <div className="flex flex-row">
@@ -98,6 +78,7 @@ export default function Home() {
       </div>
       <div className=" flex flex-row justify-center my-3">
         <div className="w-20 mx-3">
+          {/*ソート用のセレクトボックス*/}
           <form>
             <div>
               <select name="sort" id="sort" onChange={dataChange}>
@@ -105,7 +86,7 @@ export default function Home() {
                   すべて
                 </option>
                 <option value="empty">空きあり</option>
-                <option value="favorite">お気に入り</option>
+                {/* <option value="favorite">お気に入り</option> */}
               </select>
             </div>
           </form>
@@ -117,9 +98,11 @@ export default function Home() {
       </div>
       <p className="border rounded mx-10"></p>
       <p className="text-center mb-5">あなたの利用状況</p>
-      {using?.uses == null ? (
+      {/*もし使用中だと */}
+      {using != null ? (
         <div>
           <p className="text-center mb-5">使用中</p>
+          <p className="text-center mb-5">{using.laundry?.id}</p>
           <p className="text-center"></p>
           <Link to="/wash">
             <div className="flex justify-center items-center">
