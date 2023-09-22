@@ -10,15 +10,10 @@ import {
   GrCheckboxSelected,
   GrCheckbox
 } from "react-icons/gr";
-import {
-  MdHomeFilled,
-  MdOutlineLocalLaundryService,
-  MdOutlineSettings,
-} from "react-icons/md";
+import { MdOutlineLocalLaundryService } from "react-icons/md";
 const id = "ID";
 
 const Wash = () => {
-
   // チェックボックスの状態を管理するための状態変数
   const [isChecked, setIsChecked] = useState(false);
 
@@ -26,7 +21,6 @@ const Wash = () => {
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
-
 
   // QR読み込み用状態変数
   const [result, setResult] = useState('No result');
@@ -44,13 +38,16 @@ const Wash = () => {
     }
   }, [result])
 
+  //DB
+  const loader = () => {
+    
+  }
+
   const { ready, user } = useAuth();
 
   return (
     <div>
-
       {!start && (
-
         <div>
           <Header title="洗濯" />
           {/*QR読み込み*/}
