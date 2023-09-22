@@ -19,7 +19,7 @@ export default function Menu() {
 
   return (
     <div>
-      <footer className="text-black px-8  fixed bottom-0 w-full">
+      <footer className="text-black px-8 fixed bottom-0 w-full">
         {/* 各ページのコンテンツを配置 */}
         {/* メニューバー */}
 
