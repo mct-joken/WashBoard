@@ -1,6 +1,14 @@
-import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
+import {
+  InferSelectModel,
+  InferInsertModel,
+  sql,
+  relations,
+} from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
+import { AliasedColumns } from "~/types/aliasedColumns";
+import { makeAlias } from "~/utils/makeAlias";
+import { laundries } from "./laundries";
 
 export const rooms = sqliteTable("rooms", {
   id: text("id")
@@ -13,5 +21,15 @@ export const rooms = sqliteTable("rooms", {
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
 
+export const roomsRelations = relations(rooms, ({ many }) => ({
+  laundries: many(laundries),
+}));
+
 export type Room = InferSelectModel<typeof rooms>;
 export type NewRoom = InferInsertModel<typeof rooms>;
+export const RoomColumns: AliasedColumns<Room> = {
+  id: makeAlias(rooms.id),
+  place: makeAlias(rooms.place),
+  createdAt: makeAlias(rooms.createdAt),
+  updatedAt: makeAlias(rooms.updatedAt),
+};

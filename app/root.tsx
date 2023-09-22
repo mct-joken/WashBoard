@@ -14,8 +14,9 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import Notification from "app/components/notification";
+import { useNotification } from "~/hooks/useNotification";
 import stylesheet from "~/tailwind.css";
+import { initializeClient } from "./db/client.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -24,6 +25,8 @@ export const links: LinksFunction = () => [
 
 export const loader = ({ context }: LoaderFunctionArgs) => {
   const env = context.env as Env;
+
+  initializeClient(context);
 
   const firebaseOptions: FirebaseOptions = {
     apiKey: env.FIREBASE_API_KEY,
@@ -34,13 +37,17 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
     appId: env.FIREBASE_APP_ID,
   };
 
-  return json({ env, firebaseOptions });
+  return json({
+    vapidServerKey: env.FIREBASE_VAPID_SERVER_KEY,
+    firebaseOptions,
+  });
 };
 
 export default function App() {
-  const { env, firebaseOptions } = useLoaderData<typeof loader>();
+  const { vapidServerKey, firebaseOptions } = useLoaderData<typeof loader>();
 
   useSWEffect();
+  useNotification(vapidServerKey);
   initializeApp(firebaseOptions);
 
   return (
@@ -56,7 +63,6 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <Notification env={env as Env} />
       </body>
     </html>
   );
