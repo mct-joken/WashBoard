@@ -2,7 +2,7 @@ import { useSWEffect } from "@remix-pwa/sw";
 import {
   json,
   type LinksFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import {
@@ -23,7 +23,7 @@ export const links: LinksFunction = () => [
   { rel: "manifest", href: "/resources.manifest.webmanifest" },
 ];
 
-export const loader = ({ context }: LoaderArgs) => {
+export const loader = ({ context }: LoaderFunctionArgs) => {
   const env = context.env as Env;
 
   initializeClient(context);
