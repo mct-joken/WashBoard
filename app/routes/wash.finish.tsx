@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "@remix-run/react";
+import { MdOutlineLocalLaundryService } from "react-icons/md";
+import { Header } from "~/components/header";
+import Menu from "~/components/menu";
 const id = "ID";
 
-const Home = () => {
+const Finish = () => {
   // チェックボックスの状態を管理するための状態変数
   const [isChecked, setIsChecked] = useState(false);
 
@@ -13,6 +16,7 @@ const Home = () => {
 
   return (
     <div>
+      <Header title="洗濯完了" />
       <div className="text-center mt-40">
         <p>回収する洗濯機</p>
         <p className="text-2xl mt-4">{id}</p>
@@ -24,91 +28,23 @@ const Home = () => {
           {/*レイアウトをそろえるための空の要素*/}
         </li>
         <li>
-          <div className="flex  justify-center">
-            {/*完了ボタン*/}
-            <svg
-              width="134"
-              height="42"
-              viewBox="0 0 134 42"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          {/*開始ボタン*/}
+          <div className="flex  justify-center mt-14">
+            <button
+              type="button"
+              className="bg-green-400 hover:bg-green-300 text-white rounded px-4 py-2"
             >
-              <g filter="url(#filter0_d_0_1)">
-                <rect
-                  x="0.05"
-                  y="0.05"
-                  width="129.9"
-                  height="37.9"
-                  rx="14.95"
-                  fill="#34A853"
-                  fill-opacity="0.38"
-                  stroke="black"
-                  stroke-width="0.1"
-                />
-                <path
-                  d="M60.448 13.824H73.504V15.456H60.448V13.824ZM56.344 18.24H77.632V19.944H56.344V18.24ZM62.656 19.416H64.576C64.072 24.096 62.728 27.336 56.872 28.968C56.68 28.512 56.2 27.792 55.816 27.432C61.216 26.088 62.248 23.328 62.656 19.416ZM68.728 19.272H70.528V26.016C70.528 26.736 70.696 26.856 71.704 26.856C72.184 26.856 74.464 26.856 75.088 26.856C76 26.856 76.168 26.424 76.24 23.664C76.624 23.952 77.392 24.24 77.872 24.384C77.68 27.672 77.152 28.512 75.232 28.512C74.752 28.512 71.992 28.512 71.512 28.512C69.304 28.512 68.728 27.96 68.728 26.04V19.272ZM65.992 6.864H67.888V10.68H65.992V6.864ZM56.896 9.432H77.08V14.52H75.184V11.136H58.72V14.52H56.896V9.432ZM90.088 15.024H91.96V26.616C91.96 27.816 91.648 28.368 90.712 28.632C89.776 28.92 88.168 28.944 85.744 28.944C85.624 28.416 85.288 27.648 85 27.12C86.992 27.192 88.84 27.192 89.392 27.168C89.92 27.144 90.088 27 90.088 26.568V15.024ZM81.352 8.736H98.68V10.488H81.352V8.736ZM98.032 8.736H98.512L98.944 8.616L100.336 9.624C98.2 12.168 94.816 15 91.84 16.68C91.576 16.296 91 15.696 90.616 15.432C93.352 13.92 96.52 11.16 98.032 9.168V8.736Z"
-                  fill="black"
-                />
-              </g>
-              <mask
-                id="mask0_0_1"
-                maskUnits="userSpaceOnUse"
-                x="15"
-                y="7"
-                width="24"
-                height="24"
-              >
-                <rect x="15" y="7" width="24" height="24" fill="#D9D9D9" />
-              </mask>
-              <g mask="url(#mask0_0_1)">
-                <path
-                  d="M27 29C25.6167 29 24.3167 28.7375 23.1 28.2125C21.8833 27.6875 20.825 26.975 19.925 26.075C19.025 25.175 18.3125 24.1167 17.7875 22.9C17.2625 21.6833 17 20.3833 17 19C17 17.6167 17.2625 16.3167 17.7875 15.1C18.3125 13.8833 19.025 12.825 19.925 11.925C20.825 11.025 21.8833 10.3125 23.1 9.7875C24.3167 9.2625 25.6167 9 27 9C28.0833 9 29.1083 9.15833 30.075 9.475C31.0417 9.79167 31.9333 10.2333 32.75 10.8L31.3 12.275C30.6667 11.875 29.9917 11.5625 29.275 11.3375C28.5583 11.1125 27.8 11 27 11C24.7833 11 22.8958 11.7792 21.3375 13.3375C19.7792 14.8958 19 16.7833 19 19C19 21.2167 19.7792 23.1042 21.3375 24.6625C22.8958 26.2208 24.7833 27 27 27C29.2167 27 31.1042 26.2208 32.6625 24.6625C34.2208 23.1042 35 21.2167 35 19C35 18.7 34.9833 18.4 34.95 18.1C34.9167 17.8 34.8667 17.5083 34.8 17.225L36.425 15.6C36.6083 16.1333 36.75 16.6833 36.85 17.25C36.95 17.8167 37 18.4 37 19C37 20.3833 36.7375 21.6833 36.2125 22.9C35.6875 24.1167 34.975 25.175 34.075 26.075C33.175 26.975 32.1167 27.6875 30.9 28.2125C29.6833 28.7375 28.3833 29 27 29ZM25.6 23.6L21.35 19.35L22.75 17.95L25.6 20.8L35.6 10.775L37 12.175L25.6 23.6Z"
-                  fill="#1C1B1F"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_d_0_1"
-                  x="0"
-                  y="0"
-                  width="134"
-                  height="42"
-                  filterUnits="userSpaceOnUse"
-                  color-interpolation-filters="sRGB"
-                >
-                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dx="2" dy="2" />
-                  <feGaussianBlur stdDeviation="1" />
-                  <feComposite in2="hardAlpha" operator="out" />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in2="BackgroundImageFix"
-                    result="effect1_dropShadow_0_1"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_dropShadow_0_1"
-                    result="shape"
-                  />
-                </filter>
-              </defs>
-            </svg>
+              <label className="flex items-center justify-center">
+                <MdOutlineLocalLaundryService size={20} />
+                完了
+              </label>
+            </button>
           </div>
         </li>
       </ul>
+      <Menu />
     </div>
   );
 };
 
-export default Home;
+export default Finish;
