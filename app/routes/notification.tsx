@@ -1,4 +1,4 @@
-import { LoaderArgs, json, redirect } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Menu from "~/components/menu";
@@ -7,14 +7,14 @@ import { getAccountByEmail } from "~/models/account.server";
 import {
   NotificationSubscribeAPI,
   action as subscribeNotificationAction,
-} from "~/routes/api.v1.notification.subscribe";
+} from "~/routes/resources.notification.subscribe";
 import {
   NotificationSendAPI,
   action as sendNotificationAction,
-} from "~/routes/api.v1.notification.send";
+} from "~/routes/resources.notification.send";
 import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
-export const loader = async ({ context }: LoaderArgs) => {
+export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.env as Env;
   const account = await getAccountByEmail("alice@example.com");
   if (account == null) {
@@ -31,12 +31,12 @@ const NotificationTest = () => {
   const sendFetcher = useFetcher<typeof sendNotificationAction>();
   const submitSubscribe = fetcherSubmitter<NotificationSubscribeAPI>(
     subscribeFetcher,
-    "/api/v1/notification/subscribe",
+    "/resources/notification/subscribe",
     "POST"
   );
   const submitSend = fetcherSubmitter<NotificationSendAPI>(
     sendFetcher,
-    "/api/v1/notification/send",
+    "/resources/notification/send",
     "POST"
   );
 
