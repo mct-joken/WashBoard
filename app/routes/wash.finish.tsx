@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Link } from "@remix-run/react";
+import { useState } from "react";
 import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { Header } from "~/components/header";
 import Menu from "~/components/menu";
