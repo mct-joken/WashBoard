@@ -5,7 +5,7 @@ import Menu from "~/components/menu";
 import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { Laundry, Room } from "~/db/schema";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
-import { action as startWashAction } from "~/routes/wash.start.$laundryId";
+import { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();
@@ -65,7 +65,7 @@ const Wash = () => {
 
       {targetLaundry && (
         <Form
-          action={`/wash/start/${targetLaundry.id}`}
+          action={`/resources/wash/start/${targetLaundry.id}`}
           method="post"
           className="
             mt-32
