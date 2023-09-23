@@ -13,8 +13,6 @@ import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
 import { useHistories, uses } from "~/db/schema";
 import { getLaundryById } from "~/models/laundry.server";
-import { deleteUseById, getUseByLaundryId } from "~/models/use.server";
-import { createUseHistory } from "~/models/useHistory.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
 
@@ -33,6 +31,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ laundry }, 200);
 };
 
+// TODO: Transactionを使っていないため安全ではない
+// TODO: D1のTransactionもしくはDrizzleのD1 Batchサポートが為されたらそちらに戻す
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
   type WashCompleteAPI = {
     accountEmail: string;
@@ -47,40 +47,30 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     return json({ error: true }, 400);
   }
 
-  const result = await getClient().transaction(async (tx) => {
-    const use = await tx.query.uses.findFirst({
-      where: (use, { eq }) => eq(use.laundryId, laundryId),
-      with: { account: true },
-    });
-    if (use == null) {
-      return json({ error: true }, 404);
-    }
-    if (use.account?.email !== accountEmail) {
-      return json({ error: true }, 403);
-    }
-
-    const deleted = await tx.delete(uses).where(eq(uses.id, use.id));
-    if (deleted.error != null) {
-      tx.rollback();
-      return json({ error: true }, 500);
-    }
-
-    const useHistory = await tx.insert(useHistories).values({
-      accountId: use.accountId,
-      laundryId: use.laundryId,
-      startAt: use.createdAt,
-      endAt: new Date(),
-    });
-    if (useHistory.error != null) {
-      tx.rollback();
-      return json({ error: true }, 500);
-    }
-
-    return json({ error: false }, 200);
+  const use = await getClient().query.uses.findFirst({
+    where: (use, { eq }) => eq(use.laundryId, laundryId),
+    with: { account: true },
   });
+  if (use == null) {
+    return json({ error: true }, 404);
+  }
+  if (use.account?.email !== accountEmail) {
+    return json({ error: true }, 403);
+  }
 
-  if (!result.ok) {
-    return result;
+  const deleted = await getClient().delete(uses).where(eq(uses.id, use.id));
+  if (deleted.error != null) {
+    return json({ error: true }, 500);
+  }
+
+  const useHistory = await getClient().insert(useHistories).values({
+    accountId: use.accountId,
+    laundryId: use.laundryId,
+    startAt: use.createdAt,
+    endAt: new Date(),
+  });
+  if (useHistory.error != null) {
+    return json({ error: true }, 500);
   }
 
   return redirect("/home");
