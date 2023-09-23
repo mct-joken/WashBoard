@@ -26,9 +26,7 @@ export const useNotification = (vapidServerKey: string) => {
 
   useEffect(() => {
     if (notification?.title) {
-      alert(`title: ${notification.title}\nbody: ${notification.body}`);
+      alert(`${notification.title}\n${notification.body}`);
     }
   }, [notification]);
 };
-
-export default Notification;
