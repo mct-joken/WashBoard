@@ -50,17 +50,17 @@ const Wash = () => {
   }, [actionData]);
 
   return (
-    <div>
+    <>
       <Header title={targetLaundry ? "洗濯開始" : "洗濯"} />
       {!targetLaundry && (
-        <>
-          <div className="h-60">
-            <video ref={ref} className="container h-60 mx-auto" />
+        <div className="flex flex-col justify-center items-center">
+          <div id="video-qr-container" className="container">
+            <video ref={ref} className="container" id="video-qr" />
           </div>
           <p className="text-center">
             使用する洗濯機のQRコードを読み込んで下さい
           </p>
-        </>
+        </div>
       )}
 
       {targetLaundry && (
@@ -101,7 +101,7 @@ const Wash = () => {
       )}
 
       <Menu />
-    </div>
+    </>
   );
 };
 
