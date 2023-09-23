@@ -27,21 +27,18 @@ export default function Menu() {
           <li className="text-center">
             <Link to="/home">
               <MdHomeFilled size={40} color={HomeColor} />
-
               <div style={{ color: HomeColor }}>ホーム</div>
             </Link>
           </li>
           <li className="text-center">
             <Link to="/wash">
               <MdOutlineLocalLaundryService size={40} color={WashColor} />
-
               <div style={{ color: WashColor }}>洗濯</div>
             </Link>
           </li>
           <li className="text-center">
             <Link to="/settings">
               <MdOutlineSettings size={40} color={SettingsColor} />
-
               <div style={{ color: SettingsColor }}>設定</div>
             </Link>
           </li>
