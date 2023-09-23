@@ -52,7 +52,7 @@ const Wash = () => {
   return (
     <>
       <Header title={targetLaundry ? "洗濯開始" : "洗濯"} />
-      {!targetLaundry && (
+      {targetLaundry == null ? (
         <div className="flex flex-col justify-center items-center">
           <div id="video-qr-container" className="container">
             <video ref={ref} className="container" id="video-qr" />
@@ -61,9 +61,7 @@ const Wash = () => {
             使用する洗濯機のQRコードを読み込んで下さい
           </p>
         </div>
-      )}
-
-      {targetLaundry && (
+      ) : (
         <Form
           action={`/resources/wash/start/${targetLaundry.id}`}
           method="post"
