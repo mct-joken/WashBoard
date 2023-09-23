@@ -4,77 +4,11 @@ import { Header } from "~/components/header";
 import Menu from "~/components/menu";
 import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { Laundry, Room } from "~/db/schema";
-import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
-import { formDataGetter } from "~/utils/formDataGetter";
-import { isString } from "~/utils/type";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
-import { getLaundryById } from "~/models/laundry.server";
-import { getAccountByEmail } from "~/models/account.server";
-import { createUse } from "~/models/use.server";
-import { getClient } from "~/db/client.server";
-import { desc } from "drizzle-orm";
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  type WashStartAPI = {
-    laundryId: string;
-    accountEmail: string;
-    forgetting: string;
-  };
-
-  const formData = await request.formData();
-  const get = formDataGetter<WashStartAPI>(formData);
-  const laundryId = get("laundryId");
-  const accountEmail = get("accountEmail");
-  const forgetting = get("forgetting");
-
-  console.log(JSON.stringify({ laundryId, accountEmail, forgetting }));
-  if (
-    !isString(laundryId) ||
-    !isString(accountEmail) ||
-    !(forgetting === "on" || forgetting === "off")
-  ) {
-    return json({ error: true }, 400);
-  }
-
-  const laundry = await getLaundryById(laundryId);
-  const account = await getAccountByEmail(accountEmail);
-
-  if (laundry == null || account == null) {
-    return json({ error: true }, 404);
-  }
-
-  const use = await createUse(account.id, laundry.id);
-  if (use == null) {
-    return json({ error: true }, 500);
-  }
-
-  if (forgetting == "on") {
-    const prevUse = await getClient().query.useHistories.findFirst({
-      where: (useHistory, { eq }) => eq(useHistory.laundryId, laundryId),
-      orderBy: (useHistory) => desc(useHistory.endAt),
-      with: {
-        account: true,
-      },
-    });
-    if (prevUse == null || prevUse.account == null) {
-      return json({ error: false }, 200);
-    }
-
-    await fetch("/resources/notification/send", {
-      method: "POST",
-      body: JSON.stringify({
-        to: prevUse.account.messageToken,
-        notificationTitle: "取り忘れのお知らせ",
-        notificationBody: `${laundry.room?.place}の洗濯機で洗濯物を取り忘れているようです。`,
-      }),
-    });
-  }
-
-  return redirect("/home");
-};
+import { action as startWashAction } from "~/routes/wash.start.$laundryId";
 
 const Wash = () => {
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData<typeof startWashAction>();
   const navigate = useNavigate();
   const [qrResult, setQrResult] = useState<string | null>(null);
   const [targetLaundry, setTargetLaundry] = useState<
@@ -90,12 +24,7 @@ const Wash = () => {
       return;
     }
 
-    const form = new FormData();
-    form.append("laundryId", qrResult);
-    fetch("/resources/laundry/checkAvailable", {
-      method: "POST",
-      body: form,
-    })
+    fetch(`/resources/laundry/checkAvailable/${qrResult}`, { method: "POST" })
       .then(async (response) => {
         if (!response.ok) {
           alert("エラーが発生しました。もう一度読み取り直してください。");
@@ -136,6 +65,7 @@ const Wash = () => {
 
       {targetLaundry && (
         <Form
+          action={`/wash/start/${targetLaundry.id}`}
           method="post"
           className="
             mt-32
@@ -150,7 +80,6 @@ const Wash = () => {
             <label>取り忘れを報告</label>
           </div>
 
-          <input type="hidden" name="laundryId" value={targetLaundry.id} />
           <input
             type="hidden"
             name="accountEmail"
