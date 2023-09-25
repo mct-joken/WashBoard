@@ -1,25 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "../../public/icons/Group_41.svg";
 import { json } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
+import { useAuth } from "~/hooks/useAuth";
+import { UsesAPI, UsesAPIResponse, loader as usesLoader } from "./api.v1.uses";
+import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
-//DBから取得
-const id = "IMzzwO0CP60q7glLLMVGV";
 export const loader = async () => {
   const rooms = await getClient().query.rooms.findMany({
     with: { laundries: true },
   });
-  //usingは仮　IDを取ってくる必要あり
-  const using = await getClient().query.uses.findFirst({
-    where: (use, { eq }) => eq(use.id, "IMzzwO0CP60q7glLLMVGV"),
-    with: {
-      laundry: true,
-    },
-  });
-  return json({ rooms, using });
+  return json({ rooms });
 };
 
 export function ShowSelectData(filter: string) {
@@ -64,12 +58,33 @@ export function ShowSelectData(filter: string) {
 }
 
 export default function Home() {
-  let [filter, SetFilter] = useState("all");
+  const { ready, user } = useAuth();
+  const usesFetcher = useFetcher<typeof usesLoader>();
+  const submitUses = fetcherSubmitter<UsesAPI>(
+    usesFetcher,
+    "/api/v1/uses",
+    "GET"
+  );
+  const [uses, setUses] = useState<UsesAPIResponse["uses"]>();
+  useEffect(() => {
+    if (usesFetcher.data == null || usesFetcher.data.uses == null) {
+      return;
+    }
+    setUses(usesFetcher.data.uses);
+  }, [usesFetcher.data]);
+  useEffect(() => {
+    if (user == null || user.email == null) {
+      return;
+    }
+    submitUses({
+      accountEmail: "alice@example.com" /*user.email*/,
+    });
+  }, [user]);
+  const [filter, SetFilter] = useState("all");
   const dataChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     SetFilter(e.target.value);
   };
-  const { using } = useLoaderData<typeof loader>();
-  console.log(using?.laundry);
+
   return (
     <main className=" mt-2 mx-3">
       <div className="flex flex-row">
@@ -99,21 +114,31 @@ export default function Home() {
       <p className="border rounded mx-10"></p>
       <p className="text-center mb-5">あなたの利用状況</p>
       {/*もし使用中だと */}
-      {using != null ? (
+      {uses?.length && uses.length > 0 ? (
         <div>
           <p className="text-center mb-5">使用中</p>
-          <p className="text-center mb-5">{using.laundry?.id}</p>
-          <p className="text-center"></p>
-          <Link to="/wash">
-            <div className="flex justify-center items-center">
-              <p
-                className="  w-20 text-center rounded-full bg-green-400 
-                    active:bg-green-700  hover:bg-green-700 py-1 px-5 text-white mr-3"
-              >
-                回収
-              </p>
-            </div>
-          </Link>
+          <div className="flex flex-wrap">
+            {uses.map((use) => (
+              <div key={use.id} className="use-card">
+                <p>{use.laundry?.room?.place}</p>
+                {use.laundry && (
+                  <Link
+                    to={`/wash/complete/${use.laundry.id}`}
+                    className="underline"
+                  >
+                    <div className="flex justify-center items-center">
+                      <p
+                        className="w-20 text-center rounded-full bg-green-400 
+                    active:bg-green-700 hover.bg-green-700 py-1 px-5 text-white mr-3"
+                      >
+                        回収
+                      </p>
+                    </div>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <p className="text-center mb-5">なし</p>
