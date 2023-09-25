@@ -6,6 +6,9 @@ import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { Laundry, Room } from "~/db/schema";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
+import { useAuth } from "~/hooks/useAuth";
+import { Spinner } from "~/components/spinner";
+import { Login } from "~/components/login";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();
@@ -14,6 +17,7 @@ const Wash = () => {
   const [targetLaundry, setTargetLaundry] = useState<
     (Laundry & { room: Room }) | null
   >(null);
+  const { ready, user } = useAuth();
 
   const { ref } = useZxing({
     onDecodeResult: (result) => setQrResult(result.getText()),
@@ -57,9 +61,14 @@ const Wash = () => {
           <div id="video-qr-container" className="container">
             <video ref={ref} className="container" id="video-qr" />
           </div>
-          <p className="text-center">
-            使用する洗濯機のQRコードを読み込んで下さい
-          </p>
+          {!ready ? (
+            <Spinner />
+          ) : (
+            <p className="text-center">
+              使用する洗濯機のQRコードを読み込んで下さい
+            </p>
+          )}
+          <Login />
         </div>
       ) : (
         <Form
@@ -78,11 +87,7 @@ const Wash = () => {
             <label>取り忘れを報告</label>
           </div>
 
-          <input
-            type="hidden"
-            name="accountEmail"
-            value={"alice@example.com"}
-          />
+          <input type="hidden" name="accountEmail" value={user?.email ?? ""} />
 
           <button
             type="submit"

@@ -10,8 +10,10 @@ import { useEffect } from "react";
 import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { Header } from "~/components/header";
 import Menu from "~/components/menu";
+import { Spinner } from "~/components/spinner";
 import { getClient } from "~/db/client.server";
 import { useHistories, uses } from "~/db/schema";
+import { useAuth } from "~/hooks/useAuth";
 import { getLaundryById } from "~/models/laundry.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
@@ -80,6 +82,7 @@ const Complete = () => {
   const navigate = useNavigate();
   const { laundry } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+  const { ready, user } = useAuth();
 
   useEffect(() => {
     if (actionData?.error) {
@@ -91,35 +94,39 @@ const Complete = () => {
   return (
     <>
       <Header title="洗濯完了" />
-      <Form
-        method="post"
-        className="
+      {!ready ? (
+        <Spinner />
+      ) : (
+        <Form
+          method="post"
+          className="
           mt-36
           flex flex-col justify-center items-center gap-20
           flex-grow
           text-center
         "
-      >
-        <div>
-          <p>回収する洗濯機</p>
-          <p className="text-2xl mt-4">{laundry.room?.place}</p>
-        </div>
+        >
+          <div>
+            <p>回収する洗濯機</p>
+            <p className="text-2xl mt-4">{laundry.room?.place}</p>
+          </div>
 
-        <input type="hidden" name="accountEmail" value={"alice@example.com"} />
+          <input type="hidden" name="accountEmail" value={user?.email ?? ""} />
 
-        <button
-          type="submit"
-          className="
+          <button
+            type="submit"
+            className="
               px-4 py-2
               rounded
               bg-green-400 hover:bg-green-300 text-white
               flex flex-row justify-center items-center
             "
-        >
-          <MdOutlineLocalLaundryService size={20} />
-          完了
-        </button>
-      </Form>
+          >
+            <MdOutlineLocalLaundryService size={20} />
+            完了
+          </button>
+        </Form>
+      )}
       <Menu />
     </>
   );
