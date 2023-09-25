@@ -44,7 +44,7 @@ export async function getAccountByEmail(
  */
 export async function createAccount(
   email: Account["email"],
-  role: Account["role"] = null
+  role: Account["role"] | undefined = undefined
 ): Promise<Account> {
   const newAccount: NewAccount = { email, role };
 
