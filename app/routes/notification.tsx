@@ -1,9 +1,11 @@
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/cloudflare";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import {
+  useFetcher,
+  useLoaderData,
+} from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Menu from "~/components/menu";
 import { requestToken } from "~/firebase/messageServices.client";
-import { getAccountByEmail } from "~/models/account.server";
 import {
   NotificationSubscribeAPI,
   action as subscribeNotificationAction,
@@ -13,20 +15,18 @@ import {
   action as sendNotificationAction,
 } from "~/routes/resources.notification.send";
 import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
+import { useAuth } from "~/hooks/useAuth";
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.env as Env;
-  const account = await getAccountByEmail("alice@example.com");
-  if (account == null) {
-    return redirect("/home");
-  }
 
-  return json({ context, env, account });
+  return json({ vapidServerKey: env.FIREBASE_VAPID_SERVER_KEY });
 };
 
 const NotificationTest = () => {
-  const { env, account } = useLoaderData<typeof loader>();
-  const [currentAccount, setCurrentAccount] = useState(account);
+  const { user } = useAuth();
+  const { vapidServerKey } = useLoaderData<typeof loader>();
+  const [currentToken, setCurrentToken] = useState<string>();
   const subscribeFetcher = useFetcher<typeof subscribeNotificationAction>();
   const sendFetcher = useFetcher<typeof sendNotificationAction>();
   const submitSubscribe = fetcherSubmitter<NotificationSubscribeAPI>(
@@ -41,32 +41,36 @@ const NotificationTest = () => {
   );
 
   const onSubscribe = async () => {
-    const token = await requestToken(env.FIREBASE_VAPID_SERVER_KEY);
-    if (currentAccount?.messageToken === token || token === null) {
+    const token = await requestToken(vapidServerKey);
+    if (
+      currentToken === token ||
+      token == null ||
+      user?.email == null
+    ) {
       return;
     }
 
     submitSubscribe({
-      accountId: currentAccount.id,
+      accountEmail: user.email,
       messageToken: token,
     });
   };
 
   const onSend = async () => {
-    if (currentAccount.messageToken == null) {
+    if (currentToken == null) {
       return;
     }
 
     submitSend({
-      to: currentAccount.messageToken,
+      to: currentToken,
       notificationTitle: "Test",
       notificationBody: "Notification",
     });
   };
 
   useEffect(() => {
-    if (!subscribeFetcher.data) return;
-    setCurrentAccount(subscribeFetcher.data);
+    if (subscribeFetcher.data?.messageToken == null) return;
+    setCurrentToken(subscribeFetcher.data.messageToken);
   }, [subscribeFetcher.data]);
 
   return (
