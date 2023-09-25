@@ -51,7 +51,7 @@ const Wash = () => {
       alert("エラーが発生しました。もう一度読み取り直してください。");
       navigate(0);
     }
-  }, [actionData]);
+  }, [actionData, navigate]);
 
   return (
     <>
