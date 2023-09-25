@@ -1,4 +1,4 @@
-import { ActionArgs } from "@remix-run/cloudflare";
+import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
 
 type LaundryStatusAPI = {
@@ -9,7 +9,7 @@ type LaundryStatus = {
   running: boolean;
 };
 
-export const action = async ({ params, request }: ActionArgs) => {
+export const action = async ({ params, request }: ActionFunctionArgs) => {
   // `PUT`以外を許可しない
   if (request.method !== "PUT") {
     return new Response(null, { status: 405 });
@@ -25,7 +25,7 @@ export const action = async ({ params, request }: ActionArgs) => {
     return new Response(null, { status: 404 });
   }
 
-  const body = (await request.json().catch(() => null)) as LaundryStatusAPI;
+  const body = await request.json<LaundryStatusAPI>().catch(() => null);
   if (body == null || (body.status !== "true" && body.status !== "false")) {
     return new Response(null, { status: 400 });
   }

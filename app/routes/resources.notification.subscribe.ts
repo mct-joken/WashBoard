@@ -1,4 +1,4 @@
-import { ActionArgs } from "@remix-run/cloudflare";
+import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { updateAccount } from "~/models/account.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
@@ -10,7 +10,7 @@ export type NotificationSubscribeAPI = {
   messageToken: string;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const get = formDataGetter<NotificationSubscribeAPI>(formData);
 
