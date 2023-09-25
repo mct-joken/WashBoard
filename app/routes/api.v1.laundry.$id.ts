@@ -1,4 +1,7 @@
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import { getClient, initializeClient } from "~/db/client.server";
+import { pushMessage } from "~/firebase/messageServices.server";
+import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
 
 type LaundryStatusAPI = {
@@ -9,25 +12,32 @@ type LaundryStatus = {
   running: boolean;
 };
 
-export const action = async ({ params, request }: ActionFunctionArgs) => {
+export const action = async ({
+  params,
+  request,
+  context,
+}: ActionFunctionArgs) => {
   // `PUT`以外を許可しない
   if (request.method !== "PUT") {
-    return new Response(null, { status: 405 });
+    return json({}, 405);
   }
 
+  initializeClient(context);
+  const env = context.env as Env;
   const laundryId = params.id;
 
   if (laundryId == null) {
-    return new Response(null, { status: 400 });
+    return json({}, 400);
   }
 
-  if ((await getLaundryById(laundryId)) == null) {
-    return new Response(null, { status: 404 });
+  const laundry = await getLaundryById(laundryId);
+  if (laundry == null) {
+    return json({}, 404);
   }
 
   const body = await request.json<LaundryStatusAPI>().catch(() => null);
   if (body == null || (body.status !== "true" && body.status !== "false")) {
-    return new Response(null, { status: 400 });
+    return json({}, 400);
   }
 
   const laundryStatus: LaundryStatus = { running: body.status === "true" };
@@ -37,8 +47,30 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     running: laundryStatus.running,
   });
   if (result == null) {
-    return new Response(null, { status: 500 });
+    return json({}, 500);
   }
 
-  return new Response(null, { status: 200 });
+  // 洗濯終了通知
+  if (laundry.running && !result.running) {
+    const use = await getClient().query.uses.findFirst({
+      where: (use, { eq }) => eq(use.laundryId, laundryId),
+      with: { account: true },
+    });
+    const messageToken = use?.account?.messageToken;
+    console.log(messageToken);
+    if (messageToken == null) {
+      return json({}, 200);
+    }
+
+    const notification = {
+      title: "洗濯完了のお知らせ",
+      body: `${laundry.room?.place}の洗濯機の洗濯が完了しました！`,
+    };
+    await pushMessage(messageToken, notification, {
+      projectId: env.FIREBASE_PROJECT_ID,
+      serviceAccount: getServiceAccount(env),
+    });
+  }
+
+  return json({}, 200);
 };
