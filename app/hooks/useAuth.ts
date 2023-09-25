@@ -1,49 +1,70 @@
 import { Unsubscribe, User, getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { form } from "~/utils/form";
+
+type AuthConfig = {
+  behavior?: "RejectAnonymous" | "AutoSignup";
+};
 
 /**
  * 現在の認証状態をリッスンして返すフック
- * @param enableVerification 存在するAccountのログインのみ受け付けるか
+ * @param config 認証の設定
  * @returns \{`ready`: Firebase authの初期化が完了したか, `user`: ログイン中のユーザ \}
  */
 export const useAuth = (
-  enableVerification: boolean = false
+  config?: AuthConfig
 ): { ready: boolean; user: User | null } => {
   const auth = getAuth();
   const [ready, setReady] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const verifyAuth = async (user: User | null) => {
-    if (user == null) {
-      return;
-    }
-    if (user.email == null) {
-      throw new Error("Authentication rejected");
-    }
-
-    const form = new FormData();
-    form.append("email", user.email);
-    const response = await fetch("/resources/account/verify", {
-      method: "POST",
-      body: form,
-    });
-    const data = await response.json<{ valid: boolean }>();
-    if (!data.valid) {
-      throw new Error("Authentication rejected");
-    }
-  };
-
   useEffect(() => {
-    const unsubscribes: Unsubscribe[] = [];
+    const beforeAuth = async (user: User | null) => {
+      if (user == null) {
+        return;
+      }
+      if (user.email == null) {
+        throw new Error("Authentication rejected");
+      }
+      if (config?.behavior === "RejectAnonymous") {
+        verifyAccount(user.email);
+      } else if (config?.behavior === "AutoSignup") {
+        registerAccount(user.email);
+      }
+    };
+
+    const verifyAccount = async (email: string) => {
+      const response = await fetch("/resources/account/verify", {
+        method: "POST",
+        body: form({ email }),
+      });
+      const data = await response.json<{ valid: boolean }>().catch(() => null);
+      if (!response.ok || !data?.valid) {
+        throw new Error("Authentication rejected");
+      }
+    };
+
+    const registerAccount = async (email: string) => {
+      const response = await fetch("/resources/account/register", {
+        method: "POST",
+        body: form({ email }),
+      });
+      const data = await response.json<{ valid?: boolean }>().catch(() => null);
+      if (!response.ok || !data?.valid) {
+        throw new Error("Authentication rejected");
+      }
+    };
+
     auth.authStateReady().then(() => setReady(true));
-    unsubscribes.push(auth.onAuthStateChanged(setUser));
-    if (enableVerification) {
-      unsubscribes.push(auth.beforeAuthStateChanged(verifyAuth));
-    }
+    const unsubscribes: Unsubscribe[] = [
+      auth.onAuthStateChanged(setUser),
+      auth.beforeAuthStateChanged(beforeAuth),
+    ];
+
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [auth, enableVerification]);
+  }, [auth, config]);
 
   return { ready, user };
 };
