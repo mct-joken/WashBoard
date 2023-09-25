@@ -37,4 +37,5 @@ export const AccountColumns: AliasedColumns<Account> = {
   role: makeAlias(accounts.role),
   createdAt: makeAlias(accounts.createdAt),
   updatedAt: makeAlias(accounts.updatedAt),
+  messageToken: makeAlias(accounts.messageToken),
 };
