@@ -89,7 +89,7 @@ const Complete = () => {
       alert("エラーが発生しました。もう一度やり直してください。");
       navigate("/home");
     }
-  }, [actionData]);
+  }, [actionData, navigate]);
 
   return (
     <>
