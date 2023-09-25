@@ -32,7 +32,7 @@ export const laundriesRelations = relations(laundries, ({ one, many }) => ({
     fields: [laundries.roomId],
     references: [rooms.id],
   }),
-  uses: many(uses),
+  use: one(uses),
   useHistories: many(useHistories),
 }));
 

@@ -23,11 +23,11 @@ export const useAuth = (
 
     const form = new FormData();
     form.append("email", user.email);
-    const response = await fetch("/api/v1/account/verify", {
+    const response = await fetch("/resources/account/verify", {
       method: "POST",
       body: form,
     });
-    const data = (await response.json()) as { valid: boolean };
+    const data = await response.json<{ valid: boolean }>();
     if (!data.valid) {
       throw new Error("Authentication rejected");
     }

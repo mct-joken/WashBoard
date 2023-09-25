@@ -1,4 +1,4 @@
-import { ActionArgs, json } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { formDataGetter } from "~/utils/formDataGetter";
@@ -12,7 +12,7 @@ export type NotificationSendAPI = {
   notificationBody: string;
 };
 
-export const action = async ({ request, context }: ActionArgs) => {
+export const action = async ({ request, context }: ActionFunctionArgs) => {
   const env = context.env as Env;
   const formData = await request.formData();
   const get = formDataGetter<NotificationSendAPI>(formData);
