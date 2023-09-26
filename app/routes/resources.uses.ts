@@ -1,8 +1,10 @@
-import { ActionArgs, TypedResponse, json } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/cloudflare";
 import { getClient } from "~/db/client.server";
 import { getAccountByEmail } from "~/models/account.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
+
+export const loader = () => null;
 
 export type UsesAPI = {
   accountEmail: string;
@@ -21,13 +23,10 @@ export type UsesAPIResponse = {
   }[];
 };
 
-export const loader = async ({
+export const action = async ({
   request,
-}: ActionArgs): Promise<TypedResponse<UsesAPIResponse>> => {
-  const formData = await request.formData().catch(() => null);
-  if (formData == null) {
-    return json({ uses: [] });
-  }
+}: ActionFunctionArgs): Promise<TypedResponse<UsesAPIResponse>> => {
+  const formData = await request.formData();
   const get = formDataGetter<UsesAPI>(formData);
 
   const accountEmail = get("accountEmail");

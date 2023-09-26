@@ -6,7 +6,11 @@ import { useState } from "react";
 import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
 import { useAuth } from "~/hooks/useAuth";
-import { UsesAPI, UsesAPIResponse, loader as usesLoader } from "./api.v1.uses";
+import {
+  UsesAPI,
+  UsesAPIResponse,
+  action as getUsesAction,
+} from "./resources.uses";
 import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
 export const loader = async () => {
@@ -59,32 +63,33 @@ export function ShowSelectData(filter: string) {
 
 export default function Home() {
   const { ready, user } = useAuth();
-  const usesFetcher = useFetcher<typeof usesLoader>();
+  const usesFetcher = useFetcher<typeof getUsesAction>();
   const submitUses = fetcherSubmitter<UsesAPI>(
     usesFetcher,
-    "/api/v1/uses",
-    "GET"
+    "/resources/uses",
+    "POST"
   );
+
   const [uses, setUses] = useState<UsesAPIResponse["uses"]>();
   useEffect(() => {
-    if (usesFetcher.data == null || usesFetcher.data.uses == null) {
+    if (usesFetcher.data?.uses == null) {
       return;
     }
+    console.log(usesFetcher.data.uses);
     setUses(usesFetcher.data.uses);
   }, [usesFetcher.data]);
   useEffect(() => {
-    if (user == null || user.email == null) {
+    if (user?.email == null) {
       return;
     }
     submitUses({
-      accountEmail: "alice@example.com" /*user.email*/,
+      accountEmail: user.email,
     });
   }, [user]);
   const [filter, SetFilter] = useState("all");
   const dataChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     SetFilter(e.target.value);
   };
-
   return (
     <main className=" mt-2 mx-3">
       <div className="flex flex-row">
@@ -115,31 +120,28 @@ export default function Home() {
       <p className="text-center mb-5">あなたの利用状況</p>
       {/*もし使用中だと */}
       {uses?.length && uses.length > 0 ? (
-        <div>
+        <div className="max-h-72 mx-5 px-5 my-5  overflow-y-auto">
           <p className="text-center mb-5">使用中</p>
-          <div className="flex flex-wrap">
+          <div className="flex flex-row justify-center my-2.5">
             {uses.map((use) => (
-              <div key={use.id} className="use-card">
-                <p>{use.laundry?.room?.place}</p>
+              <div key={use.id} className="flex flex-row">
+                <p className="text-center mr-2 text-lg">{use.laundry?.room?.place}</p>
                 {use.laundry && (
                   <Link
                     to={`/wash/complete/${use.laundry.id}`}
-                    className="underline"
+                    className="w-30  rounded-full bg-green-400 
+                active:bg-green-700 hover:bg-green-700 py-1 px-5 text-white mr-3"
                   >
-                    <div className="flex justify-center items-center">
-                      <p
-                        className="w-20 text-center rounded-full bg-green-400 
-                    active:bg-green-700 hover.bg-green-700 py-1 px-5 text-white mr-3"
-                      >
-                        回収
-                      </p>
-                    </div>
+                    回収
                   </Link>
                 )}
               </div>
+              
             ))}
           </div>
+
         </div>
+        
       ) : (
         <p className="text-center mb-5">なし</p>
       )}
