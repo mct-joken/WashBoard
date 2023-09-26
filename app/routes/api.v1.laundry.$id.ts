@@ -3,6 +3,7 @@ import { getClient, initializeClient } from "~/db/client.server";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
+import { Notification } from "~/firebase/messageServices.server";
 
 type LaundryStatusAPI = {
   status: string;
@@ -57,14 +58,14 @@ export const action = async ({
       with: { account: true },
     });
     const messageToken = use?.account?.messageToken;
-    console.log(messageToken);
     if (messageToken == null) {
       return json({}, 200);
     }
 
-    const notification = {
+    const notification: Notification = {
       title: "洗濯完了のお知らせ",
       body: `${laundry.room?.place}の洗濯機の洗濯が完了しました！`,
+      link: `/wash/complete/${laundry.id}`,
     };
     await pushMessage(messageToken, notification, {
       projectId: env.FIREBASE_PROJECT_ID,
