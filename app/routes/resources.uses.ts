@@ -15,6 +15,7 @@ export type UsesAPIResponse = {
     id: string;
     laundry?: {
       id?: string;
+      running?: boolean | null;
       room?: {
         id?: string;
         place?: string;
@@ -49,6 +50,7 @@ export const action = async ({
       },
     },
   });
+
   if (account == null) return json({ uses: [] }, 404);
   return json(
     {
@@ -56,6 +58,7 @@ export const action = async ({
         id: use.id,
         laundry: {
           id: use.laundry?.id,
+          running: use.laundry?.running,
           room: {
             id: use.laundry?.room?.id,
             place: use.laundry?.room?.place,

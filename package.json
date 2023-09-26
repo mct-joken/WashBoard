@@ -2,7 +2,6 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
-  "start": "wrangler pages dev --compatibility-date=2023-06-21 ./public --env=.dev.vars",
   "scripts": {
     "build": "run-s build:*",
     "dev": "run-p dev:*",
