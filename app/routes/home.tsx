@@ -122,7 +122,7 @@ export default function Home() {
                 )}
                 <p className=" mr-2 text-lg">{use.laundry?.room?.place}</p>
 
-                {!use.laundry?.running && (
+                {!use.laundry?.running &&  use.laundry ?(
                   <Link
                     to={`/wash/complete/${use.laundry.id}`}
                     className=" rounded-full bg-green-400 
@@ -130,7 +130,7 @@ export default function Home() {
                   >
                     回収
                   </Link>
-                )}
+                ):("")}
               </div>
             ))}
           </div>
