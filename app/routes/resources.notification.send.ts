@@ -1,13 +1,14 @@
 import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
+import { getAccountByEmail } from "~/models/account.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
 
 export const loader = () => null;
 
 export type NotificationSendAPI = {
-  to: string;
+  accountEmail: string;
   notificationTitle: string;
   notificationBody: string;
 };
@@ -17,16 +18,21 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const get = formDataGetter<NotificationSendAPI>(formData);
 
-  const to = get("to");
+  const accountEmail = get("accountEmail");
   const title = get("notificationTitle");
   const body = get("notificationBody");
 
-  if (!isString(to) || !isString(title) || !isString(body)) {
+  if (!isString(accountEmail) || !isString(title) || !isString(body)) {
     return json({}, 400);
   }
 
+  const account = await getAccountByEmail(accountEmail);
+  if (account?.messageToken == null) {
+    return json({}, 404);
+  }
+
   const response = await pushMessage(
-    to,
+    account.messageToken,
     { title, body },
     {
       projectId: env.FIREBASE_PROJECT_ID,

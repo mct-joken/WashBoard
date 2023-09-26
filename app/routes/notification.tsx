@@ -1,8 +1,5 @@
 import { LoaderFunctionArgs, json } from "@remix-run/cloudflare";
-import {
-  useFetcher,
-  useLoaderData,
-} from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Menu from "~/components/menu";
 import { requestToken } from "~/firebase/messageServices.client";
@@ -42,11 +39,7 @@ const NotificationTest = () => {
 
   const onSubscribe = async () => {
     const token = await requestToken(vapidServerKey);
-    if (
-      currentToken === token ||
-      token == null ||
-      user?.email == null
-    ) {
+    if (currentToken === token || token == null || user?.email == null) {
       return;
     }
 
@@ -57,12 +50,12 @@ const NotificationTest = () => {
   };
 
   const onSend = async () => {
-    if (currentToken == null) {
+    if (user?.email == null) {
       return;
     }
 
     submitSend({
-      to: currentToken,
+      accountEmail: user.email,
       notificationTitle: "Test",
       notificationBody: "Notification",
     });
@@ -79,7 +72,7 @@ const NotificationTest = () => {
         <button
           onClick={onSubscribe}
           className="
-            m-2 p-2 border rounded-lg
+            m-2 p-2 border rounded
             shadow
             hover:bg-gray-300
             active:bg-slate-500 active:text-white active:shadow-none
@@ -90,7 +83,7 @@ const NotificationTest = () => {
         <button
           onClick={onSend}
           className="
-            m-2 p-2 border rounded-lg
+            m-2 p-2 border rounded
             shadow
             hover:bg-gray-300
             active:bg-slate-500 active:text-white active:shadow-none
