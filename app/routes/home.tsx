@@ -115,22 +115,21 @@ export default function Home() {
           <div className="flex flex-row justify-center my-2.5">
             {uses.map((use) => (
               <div key={use.id} className="flex flex-row">
+                <p className=" mr-2 text-lg">{use.laundry?.room?.place}</p>
                 {use.laundry?.running ? (
                   <p className="mr-2.5 text-lg">洗濯中</p>
                 ) : (
-                  <p className="mr-2.5 text-lg">終了</p>
+                  <>
+                    <p className="mr-2.5 text-lg">終了</p>
+                    <Link
+                      to={`/wash/complete/${use.laundry?.id}`}
+                      className=" rounded-full bg-green-400 
+               hover:bg-green-700 py-1 px-5 text-white mr-3"
+                    >
+                      回収
+                    </Link>
+                  </>
                 )}
-                <p className=" mr-2 text-lg">{use.laundry?.room?.place}</p>
-
-                {!use.laundry?.running &&  use.laundry ?(
-                  <Link
-                    to={`/wash/complete/${use.laundry.id}`}
-                    className=" rounded-full bg-green-400 
-                 hover:bg-green-700 py-1 px-5 text-white mr-3"
-                  >
-                    回収
-                  </Link>
-                ):("")}
               </div>
             ))}
           </div>
