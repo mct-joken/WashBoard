@@ -13,10 +13,12 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "@remix-run/react";
 import { useNotification } from "~/hooks/useNotification";
 import stylesheet from "~/tailwind.css";
 import { initializeClient } from "./db/client.server";
+import { useRequireAuth } from "./hooks/useRequireAuth";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -45,10 +47,12 @@ export const loader = ({ context }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { vapidServerKey, firebaseOptions } = useLoaderData<typeof loader>();
+  initializeApp(firebaseOptions);
+  const { pathname } = useLocation();
 
   useSWEffect();
   useNotification(vapidServerKey);
-  initializeApp(firebaseOptions);
+  useRequireAuth(pathname);
 
   return (
     <html lang="ja">

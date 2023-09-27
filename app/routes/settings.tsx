@@ -4,6 +4,8 @@ import account from "public/account_box_FILL0_wght400_GRAD0_opsz48.png";
 import notify from "public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
 import Menu from "~/components/menu";
 import { useAuth } from "~/hooks/useAuth";
+import { signOutFirebase } from "~/firebase/authServices.client";
+import { Form } from "@remix-run/react";
 
 export default function Setting() {
   const { user } = useAuth();
@@ -55,7 +57,30 @@ export default function Setting() {
           </div>
           <div className="ml-12">
             <p className="my-2">メールアドレス</p>
-            <p className="my-2">{user?.email}</p>
+            {user && (
+              <>
+                <p className="my-2">{user.email}</p>
+                <Form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (
+                      confirm(
+                        "再度サインインするまでアプリを使用できなくなります。\nサインアウトしますか？"
+                      )
+                    ) {
+                      signOutFirebase();
+                    }
+                  }}
+                >
+                  <button
+                    type="submit"
+                    className="text-red-500 hover:underline"
+                  >
+                    サインアウト
+                  </button>
+                </Form>
+              </>
+            )}
           </div>
         </section>
         <hr />
