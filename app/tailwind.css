@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 #video-qr-container {
-  padding: 0;
-  max-width: 80vw;
-  min-width: 18rem;
+  margin: 3rem;
+  max-width: min(50vh, 50vw);
+  min-width: 17rem;
   aspect-ratio: 1;
 }
 
