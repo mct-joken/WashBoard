@@ -8,7 +8,6 @@ import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
 import { useAuth } from "~/hooks/useAuth";
 import { Spinner } from "~/components/spinner";
-import { Login } from "~/components/login";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();
