@@ -15,4 +15,6 @@ export const useRequireAuth = (redirectTo: string) => {
       navigate("/signin", { state: { redirectTo } });
     }
   }, [ready, user]);
+
+  return { ready, user };
 };

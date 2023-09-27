@@ -47,7 +47,7 @@ const NotificationTest = () => {
     }
 
     submitSubscribe({
-      accountId: currentAccount.id,
+      accountEmail: currentAccount.email,
       messageToken: token,
     });
   };

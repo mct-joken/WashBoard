@@ -51,8 +51,8 @@ export default function App() {
   const { pathname } = useLocation();
 
   useSWEffect();
-  useNotification(vapidServerKey);
-  useRequireAuth(pathname);
+  const { user } = useRequireAuth(pathname);
+  useNotification(vapidServerKey, user?.email);
 
   return (
     <html lang="ja">
