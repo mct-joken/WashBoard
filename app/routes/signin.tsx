@@ -16,7 +16,7 @@ const Signin = (): React.ReactElement => {
     if (user) {
       navigate(redirectTo);
     }
-  }, [user]);
+  }, [ready, user]);
 
   return (
     <div
@@ -34,7 +34,7 @@ const Signin = (): React.ReactElement => {
       >
         <MdOutlineLocalLaundryService /> Washboard
       </div>
-      {!ready ? (
+      {!ready || user != null ? (
         <Spinner />
       ) : (
         <button
