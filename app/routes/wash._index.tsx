@@ -3,12 +3,11 @@ import { useZxing } from "react-zxing";
 import { Header } from "~/components/header";
 import Menu from "~/components/menu";
 import { MdOutlineLocalLaundryService } from "react-icons/md";
-import { Laundry, Room } from "~/db/schema";
+import type { Laundry, Room } from "~/db/schema";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
-import { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
+import type { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
 import { useAuth } from "~/hooks/useAuth";
 import { Spinner } from "~/components/spinner";
-import { Login } from "~/components/login";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();
