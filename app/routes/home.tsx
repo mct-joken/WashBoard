@@ -139,9 +139,9 @@ const UseStatusCard = (props: { use: UsesAPIResponse["uses"][number] }) => (
     {props.use.laundry?.running ? (
       <p
         className="
-      px-5 py-1 rounded-3xl
-      bg-blue-400 text-white
-    "
+          px-5 py-1 rounded-3xl
+          bg-blue-400 text-white
+        "
       >
         洗濯中
       </p>
@@ -149,9 +149,9 @@ const UseStatusCard = (props: { use: UsesAPIResponse["uses"][number] }) => (
       <Link
         to={`/wash/complete/${props.use.laundry?.id}`}
         className="
-      px-5 py-1 rounded-3xl shadow-md
-      bg-green-400 hover:bg-green-500 text-white
-    "
+          px-5 py-1 rounded-3xl shadow-md
+          bg-green-400 hover:bg-green-500 text-white
+        "
       >
         回収
       </Link>
