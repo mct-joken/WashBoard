@@ -3,11 +3,10 @@
 @tailwind utilities;
 
 #video-qr-container {
-  margin: auto;
+  padding: 0;
   max-width: 55vh;
   min-width: 20rem;
   aspect-ratio: 1;
-  padding: 3rem;
 }
 
 #video-qr {
