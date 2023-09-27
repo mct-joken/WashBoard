@@ -8,13 +8,16 @@ import { Spinner } from "~/components/spinner";
 
 const Signin = (): React.ReactElement => {
   const { state } = useLocation();
-  const redirectTo = state?.redirectTo ?? "/home";
+  const to =
+    state?.redirectTo == null || state.redirectTo == "/signin"
+      ? "/home"
+      : state.redirectTo;
   const { ready, user } = useAuth({ behavior: "AutoSignup" });
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      navigate(redirectTo);
+      navigate(to);
     }
   }, [ready, user]);
 
