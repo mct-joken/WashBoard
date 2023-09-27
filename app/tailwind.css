@@ -4,8 +4,8 @@
 
 #video-qr-container {
   padding: 0;
-  max-width: 55vh;
-  min-width: 20rem;
+  max-width: 80vw;
+  min-width: 18rem;
   aspect-ratio: 1;
 }
 
