@@ -2,10 +2,11 @@ import { createAccessToken } from "./jwt.server";
 
 type TargetToken = string;
 
-type Notification = {
+export type Notification = {
   title: string;
   body: string;
   image?: string;
+  link?: string;
 };
 
 type MessageConfig = {
@@ -22,7 +23,16 @@ export const pushMessage = async (
   const request = `https://fcm.googleapis.com/v1/projects/${config.projectId}/messages:send`;
   const message = {
     token: to,
-    notification,
+    notification: {
+      title: notification.title,
+      body: notification.body,
+      image: notification.image,
+    },
+    webpush: {
+      fcm_options: {
+        link: notification.link,
+      },
+    },
   };
 
   return await fetch(request, {
