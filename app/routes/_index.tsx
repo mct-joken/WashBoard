@@ -1,15 +1,14 @@
-import { redirect, type V2_MetaFunction } from "@remix-run/cloudflare";
-export const meta: V2_MetaFunction = () => {
+import { redirect, MetaFunction } from "@remix-run/cloudflare";
+export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Washboard" },
+    { name: "description", content: "Washboard" },
   ];
 };
 export const loader = () => {
-  return redirect("/home");
-}
+  return redirect("/signin");
+};
+
 export default function Index() {
-  return (
-    <></>
-  );
+  return <></>;
 }
