@@ -2,6 +2,7 @@ import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/cloudflare";
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { accounts } from "~/db/schema";
+import { getAccountByEmail } from "~/models/account.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
 
@@ -29,6 +30,12 @@ export const action = async ({
 
   if (!isString(accountEmail) || !isString(messageToken)) {
     return json({}, 400);
+  }
+
+  const account = await getAccountByEmail(accountEmail);
+
+  if (account == null) {
+    return json({}, 404);
   }
 
   const result = await getClient()

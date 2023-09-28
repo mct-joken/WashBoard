@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { json } from "@remix-run/cloudflare";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
 import { useAuth } from "~/hooks/useAuth";
@@ -79,7 +78,7 @@ export default function Home() {
           ).length;
           if (availableLaundriesCount > 0) {
             return (
-              <div className="flex flex-row justify-center gap-3">
+              <div className="flex flex-row justify-center gap-3" key={room.id}>
                 <div
                   className="
                     py-1 px-5 rounded-3xl
@@ -94,7 +93,7 @@ export default function Home() {
             );
           } else if (filter == "all") {
             return (
-              <div className="flex flex-row justify-center gap-3">
+              <div className="flex flex-row justify-center gap-3" key={room.id}>
                 <div
                   className="
                     py-1 px-5 rounded-3xl

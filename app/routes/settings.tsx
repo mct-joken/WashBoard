@@ -6,6 +6,7 @@ import Menu from "~/components/menu";
 import { useAuth } from "~/hooks/useAuth";
 import { signOutFirebase } from "~/firebase/authServices.client";
 import { Form } from "@remix-run/react";
+import { isSupported } from "firebase/messaging";
 
 export default function Setting() {
   const { user } = useAuth();
@@ -30,10 +31,31 @@ export default function Setting() {
     if (i) setReminderInterval(i);
     else setReminderInterval("3");
   }, []);
-  const handleNotificationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNotification(e.target.checked);
-    window.localStorage.setItem("notification", e.target.checked.toString());
-    if (!e.target.checked) handleReminderChange(e);
+  const handleNotificationChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = e.target.checked;
+    setNotification(checked);
+    if (!checked) handleReminderChange(e);
+
+    const isNotificationSupported = await isSupported();
+
+    if (!isNotificationSupported) {
+      alert("このブラウザは通知には対応していないようです。");
+      setNotification(false);
+      return;
+    }
+
+    if (Notification.permission === "default") {
+      await Notification.requestPermission();
+    }
+    if (Notification.permission !== "granted") {
+      alert("権限がないため、通知機能を使用することができません。");
+      setNotification(false);
+      return;
+    }
+
+    window.localStorage.setItem("notification", checked.toString());
   };
   const handleReminderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReminder(e.target.checked);

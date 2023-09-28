@@ -15,7 +15,7 @@ export const action = async ({
 }: ActionFunctionArgs) => {
   type WashStartAPI = {
     accountEmail: string;
-    forgetting: string;
+    forgetting?: string;
   };
 
   const env = context.env as Env;
@@ -23,7 +23,7 @@ export const action = async ({
   const get = formDataGetter<WashStartAPI>(formData);
   const laundryId = params.laundryId;
   const accountEmail = get("accountEmail");
-  const forgetting = get("forgetting") != null;
+  const forgetting = get("forgetting");
 
   if (!isString(laundryId) || !isString(accountEmail)) {
     return json({ error: true }, 400);
@@ -47,7 +47,7 @@ export const action = async ({
     return json({ error: true }, 500);
   }
 
-  if (forgetting) {
+  if (forgetting === "on") {
     const prevUse = await getClient().query.useHistories.findFirst({
       where: (useHistory, { eq }) => eq(useHistory.laundryId, laundryId),
       orderBy: (useHistory) => desc(useHistory.endAt),
@@ -55,11 +55,7 @@ export const action = async ({
         account: true,
       },
     });
-    if (
-      prevUse == null ||
-      prevUse.account == null ||
-      prevUse.account.messageToken == null
-    ) {
+    if (prevUse?.account?.messageToken == null) {
       return json({ error: false }, 200);
     }
 
