@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import {
   onMessageListener,
@@ -18,6 +18,7 @@ export const useNotification = (
     title: string | undefined;
     body: string | undefined;
   }>();
+  const { pathname } = useLocation();
   const subscribeFetcher = useFetcher<typeof subscribeNotificationAction>();
   const [currentAccount, setCurrentAccount] =
     useState<NonNullable<typeof subscribeFetcher.data>>();
@@ -55,7 +56,7 @@ export const useNotification = (
       });
     };
     setToken();
-  }, [accountEmail]);
+  }, [accountEmail, pathname]);
 
   useEffect(() => {
     if (notification?.title) {
