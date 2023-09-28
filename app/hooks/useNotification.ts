@@ -1,19 +1,33 @@
+import { useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import {
   onMessageListener,
   requestToken,
 } from "~/firebase/messageServices.client";
+import {
+  action as subscribeNotificationAction,
+  NotificationSubscribeAPI,
+} from "~/routes/resources.notification.subscribe";
+import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 
-export const useNotification = (vapidServerKey: string) => {
+export const useNotification = (
+  vapidServerKey: string,
+  accountEmail?: string | null
+) => {
   const [notification, setNotification] = useState<{
     title: string | undefined;
     body: string | undefined;
   }>();
+  const subscribeFetcher = useFetcher<typeof subscribeNotificationAction>();
+  const [currentAccount, setCurrentAccount] =
+    useState<NonNullable<typeof subscribeFetcher.data>>();
+  const submitSubscribe = fetcherSubmitter<NotificationSubscribeAPI>(
+    subscribeFetcher,
+    "/resources/notification/subscribe",
+    "POST"
+  );
 
   useEffect(() => {
-    (async () => {
-      await requestToken(vapidServerKey);
-    })();
     return onMessageListener((payload) => {
       setNotification({
         title: payload?.notification?.title,
@@ -25,8 +39,35 @@ export const useNotification = (vapidServerKey: string) => {
   }, []);
 
   useEffect(() => {
+    const setToken = async () => {
+      const token = await requestToken(vapidServerKey);
+      if (
+        token == null ||
+        accountEmail == null ||
+        currentAccount?.messageToken === token
+      ) {
+        return;
+      }
+
+      submitSubscribe({
+        accountEmail: accountEmail,
+        messageToken: token,
+      });
+    };
+    setToken();
+  }, [accountEmail]);
+
+  useEffect(() => {
     if (notification?.title) {
       alert(`${notification.title}\n${notification.body}`);
     }
   }, [notification]);
+
+  useEffect(() => {
+    if (subscribeFetcher.data == null) {
+      return;
+    }
+
+    setCurrentAccount(subscribeFetcher.data);
+  }, [subscribeFetcher.data]);
 };
