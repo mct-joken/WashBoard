@@ -4,7 +4,7 @@ import { getClient } from "~/db/client.server";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getAccountByEmail } from "~/models/account.server";
-import { createUse } from "~/models/use.server";
+import { createUse, deleteUseById } from "~/models/use.server";
 import { formDataGetter } from "~/utils/formDataGetter";
 import { isString } from "~/utils/type";
 
@@ -39,7 +39,14 @@ export const action = async ({
     return json({ error: true }, 404);
   }
   if (laundry.use != null) {
-    return json({ error: true }, 403);
+    if (laundry.use.endAt == null) {
+      return json({ error: true }, 423);
+    }
+
+    const deleted = await deleteUseById(laundry.use.id);
+    if (deleted == null) {
+      return json({ error: true }, 500);
+    }
   }
 
   const use = await createUse(account.id, laundry.id);
