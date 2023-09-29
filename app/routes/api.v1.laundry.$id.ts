@@ -4,6 +4,7 @@ import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
 import { Notification } from "~/firebase/messageServices.server";
+import { updateUse } from "~/models/use.server";
 
 type LaundryStatusAPI = {
   status: string;
@@ -51,14 +52,19 @@ export const action = async ({
     return json({}, 500);
   }
 
-  // 洗濯終了通知
+  // 洗濯終了
   if (laundry.running && !result.running) {
     const use = await getClient().query.uses.findFirst({
       where: (use, { eq }) => eq(use.laundryId, laundryId),
       with: { account: true },
     });
-    const messageToken = use?.account?.messageToken;
-    if (messageToken == null) {
+    if (use == null) {
+      return json({}, 200);
+    }
+
+    await updateUse({ id: use.id, endAt: new Date() });
+
+    if (use.account?.messageToken == null) {
       return json({}, 200);
     }
 
@@ -67,7 +73,7 @@ export const action = async ({
       body: `${laundry.room?.place}の洗濯機の洗濯が完了しました！`,
       link: `/wash/complete/${laundry.id}`,
     };
-    await pushMessage(messageToken, notification, {
+    await pushMessage(use.account.messageToken, notification, {
       projectId: env.FIREBASE_PROJECT_ID,
       serviceAccount: getServiceAccount(env),
     });

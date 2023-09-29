@@ -8,13 +8,14 @@ import { Form, useActionData, useNavigate } from "@remix-run/react";
 import type { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
 import { useAuth } from "~/hooks/useAuth";
 import { Spinner } from "~/components/spinner";
+import { LaundryCheckAvailableAPIResponse } from "./resources.laundry.checkAvailable.$id";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();
   const navigate = useNavigate();
   const [qrResult, setQrResult] = useState<string | null>(null);
   const [targetLaundry, setTargetLaundry] = useState<
-    (Laundry & { room: Room }) | null
+    (Laundry & { room: Room | null }) | null
   >(null);
   const { ready, user } = useAuth();
 
@@ -29,14 +30,14 @@ const Wash = () => {
 
     fetch(`/resources/laundry/checkAvailable/${qrResult}`, { method: "POST" })
       .then(async (response) => {
-        if (!response.ok) {
-          alert("エラーが発生しました。もう一度読み取り直してください。");
+        const data = await response.json<LaundryCheckAvailableAPIResponse>();
+        if (!response.ok || data.laundry == null) {
+          alert(
+            data.error ??
+              "エラーが発生しました。もう一度読み取り直してください。"
+          );
+          navigate(0);
           return;
-        }
-
-        const data = await response.json<{ laundry?: any }>();
-        if (data.laundry == null) {
-          alert("この洗濯機は現在使用されています。");
         }
         setTargetLaundry(data.laundry ?? null);
       })
@@ -78,7 +79,7 @@ const Wash = () => {
           "
         >
           <p>使用する洗濯機</p>
-          <p className="text-2xl">{targetLaundry.room.place}</p>
+          <p className="text-2xl">{targetLaundry.room?.place}</p>
 
           <div className="flex flex-row justify-center items-center">
             <input type="checkbox" name="forgetting" className="w-5 h-5 m-2" />

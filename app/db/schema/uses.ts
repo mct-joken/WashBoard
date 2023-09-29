@@ -26,6 +26,7 @@ export const uses = sqliteTable("uses", {
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  endAt: integer("endAt", { mode: "timestamp_ms" }),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" }),
 });
 
@@ -46,6 +47,7 @@ export const UseColumns: AliasedColumns<Use> = {
   id: makeAlias(uses.id),
   accountId: makeAlias(uses.accountId),
   createdAt: makeAlias(uses.createdAt),
+  endAt: makeAlias(uses.endAt),
   updatedAt: makeAlias(uses.updatedAt),
   laundryId: makeAlias(uses.laundryId),
 };

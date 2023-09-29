@@ -104,6 +104,24 @@ export async function createUse(
 }
 
 /**
+ * `uses`テーブルの`id`が合致する`Use`を更新する
+ * @param use 更新する`Use`
+ * @returns 更新された`Use`
+ */
+export async function updateUse(use: {
+  id: Use["id"];
+  endAt: Use["endAt"];
+}): Promise<Use | undefined> {
+  const { id, endAt } = use;
+  return getClient()
+    .update(uses)
+    .set({ endAt, updatedAt: new Date() })
+    .where(eq(uses.id, id))
+    .returning()
+    .get();
+}
+
+/**
  * `uses`テーブルから`id`が合致する`Use`を削除する
  * @param id 検索するid
  * @returns 削除できた場合はその削除された`Use`, 削除できなければ`undefined`
