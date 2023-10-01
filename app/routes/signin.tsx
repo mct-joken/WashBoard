@@ -26,10 +26,10 @@ const Signin = (): React.ReactElement => {
     <div
       className="
         h-screen
-        flex flex-col justify-center items-center gap-5
+        flex flex-col justify-center items-center gap-9
       "
     >
-      <img src={appBanner} className="w-72 m-4" />
+      <img src={appBanner} className="w-72" />
       {!ready || user != null ? (
         <Spinner />
       ) : (
