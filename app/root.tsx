@@ -2,7 +2,7 @@ import { useSWEffect } from "@remix-pwa/sw";
 import {
   json,
   type LinksFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import {
@@ -13,17 +13,22 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "@remix-run/react";
-import Notification from "app/components/notification";
+import { useNotification } from "~/hooks/useNotification";
 import stylesheet from "~/tailwind.css";
+import { initializeClient } from "./db/client.server";
+import { useRequireAuth } from "./hooks/useRequireAuth";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
   { rel: "manifest", href: "/resources.manifest.webmanifest" },
 ];
 
-export const loader = ({ context }: LoaderArgs) => {
+export const loader = ({ context }: LoaderFunctionArgs) => {
   const env = context.env as Env;
+
+  initializeClient(context);
 
   const firebaseOptions: FirebaseOptions = {
     apiKey: env.FIREBASE_API_KEY,
@@ -34,14 +39,20 @@ export const loader = ({ context }: LoaderArgs) => {
     appId: env.FIREBASE_APP_ID,
   };
 
-  return json({ env, firebaseOptions });
+  return json({
+    vapidServerKey: env.FIREBASE_VAPID_SERVER_KEY,
+    firebaseOptions,
+  });
 };
 
 export default function App() {
-  const { env, firebaseOptions } = useLoaderData<typeof loader>();
+  const { vapidServerKey, firebaseOptions } = useLoaderData<typeof loader>();
+  initializeApp(firebaseOptions);
+  const { pathname } = useLocation();
 
   useSWEffect();
-  initializeApp(firebaseOptions);
+  const { user } = useRequireAuth(pathname);
+  useNotification(vapidServerKey, user?.email);
 
   return (
     <html lang="ja">
@@ -56,7 +67,6 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <Notification env={env as Env} />
       </body>
     </html>
   );

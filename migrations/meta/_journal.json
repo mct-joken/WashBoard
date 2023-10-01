@@ -8,6 +8,20 @@
       "when": 1693831068277,
       "tag": "0000_pale_sentinels",
       "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1694790091314,
+      "tag": "0001_thin_slapstick",
+      "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1695973915776,
+      "tag": "0002_large_guardian",
+      "breakpoints": false
     }
   ]
 }

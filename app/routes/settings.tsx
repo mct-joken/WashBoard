@@ -3,11 +3,13 @@ import { Header } from "~/components/header";
 import account from "public/account_box_FILL0_wght400_GRAD0_opsz48.png";
 import notify from "public/edit_notifications_FILL0_wght400_GRAD0_opsz48.png";
 import Menu from "~/components/menu";
+import { useAuth } from "~/hooks/useAuth";
+import { signOutFirebase } from "~/firebase/authServices.client";
+import { Form } from "@remix-run/react";
+import { isSupported } from "firebase/messaging";
 
 export default function Setting() {
-  // メールアドレス表示は一時的にこうします。
-  const email = "j2000@matsue-ct.ac.jp";
-
+  const { user } = useAuth();
   const [notification, setNotification] = useState(false);
   const [reminder, setReminder] = useState(false);
   const [reminderInterval, setReminderInterval] = useState<string>("");
@@ -16,41 +18,48 @@ export default function Setting() {
   // https://remix.run/docs/en/1.19.3/guides/constraints#rendering-with-browser-only-apis
   useEffect(() => {
     const n = window.localStorage.getItem("notification");
-    const boolN = Boolean(n);
-    setNotification(boolN);
-
-    const r = window.localStorage.getItem("reminder");
-    const boolR = Boolean(r);
-    setReminder(boolR);
-
+    if (n === "true") {
+      setNotification(true);
+      const r = window.localStorage.getItem("reminder");
+      if (r === "true") setReminder(true);
+      else setReminder(false);
+    } else {
+      setNotification(false);
+      setReminder(false);
+    }
     const i = window.localStorage.getItem("reminderInterval");
     if (i) setReminderInterval(i);
     else setReminderInterval("3");
   }, []);
+  const handleNotificationChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = e.target.checked;
+    setNotification(checked);
+    if (!checked) handleReminderChange(e);
 
-  useEffect(() => {
-    if (notification) window.localStorage.setItem("notification", "true");
-    else {
-      window.localStorage.removeItem("notification");
-      setReminder(false);
-      window.localStorage.removeItem("reminder");
+    const isNotificationSupported = await isSupported();
+
+    if (!isNotificationSupported) {
+      alert("このブラウザは通知には対応していないようです。");
+      setNotification(false);
+      return;
     }
-  }, [notification]);
 
-  useEffect(() => {
-    if (reminder) window.localStorage.setItem("reminder", "true");
-    else window.localStorage.removeItem("reminder");
-  }, [reminder]);
+    if (Notification.permission === "default") {
+      await Notification.requestPermission();
+    }
+    if (Notification.permission !== "granted") {
+      alert("権限がないため、通知機能を使用することができません。");
+      setNotification(false);
+      return;
+    }
 
-  useEffect(() => {
-    window.localStorage.setItem("reminderInterval", reminderInterval);
-  }, [reminderInterval]);
-
-  const handleNotificationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNotification(e.target.checked);
+    window.localStorage.setItem("notification", checked.toString());
   };
   const handleReminderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReminder(e.target.checked);
+    window.localStorage.setItem("reminder", e.target.checked.toString());
   };
   const handleReminderIntervalChange = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -70,7 +79,30 @@ export default function Setting() {
           </div>
           <div className="ml-12">
             <p className="my-2">メールアドレス</p>
-            <p className="my-2">{email}</p>
+            {user && (
+              <>
+                <p className="my-2">{user.email}</p>
+                <Form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (
+                      confirm(
+                        "再度サインインするまでアプリを使用できなくなります。\nサインアウトしますか？"
+                      )
+                    ) {
+                      signOutFirebase();
+                    }
+                  }}
+                >
+                  <button
+                    type="submit"
+                    className="text-red-500 hover:underline"
+                  >
+                    サインアウト
+                  </button>
+                </Form>
+              </>
+            )}
           </div>
         </section>
         <hr />
@@ -90,8 +122,8 @@ export default function Setting() {
                     checked={notification}
                     onChange={handleNotificationChange}
                   />
-                  <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-sky-400"></div>
-                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-sky-50"></div>
+                  <div className="w-10 h-6 rounded-full shadow-inner bg-gray-400 peer-checked:bg-sky-400"></div>
+                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto bg-sky-50"></div>
                 </span>
               </label>
             </div>
@@ -106,8 +138,8 @@ export default function Setting() {
                     onChange={handleReminderChange}
                     disabled={!notification}
                   />
-                  <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-sky-400"></div>
-                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-sky-50"></div>
+                  <div className="w-10 h-6 rounded-full shadow-inner bg-gray-400 peer-checked:bg-sky-400"></div>
+                  <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto bg-sky-50"></div>
                 </span>
               </label>
             </div>
