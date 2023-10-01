@@ -55,7 +55,10 @@ export async function copyText(text: string): Promise<ResponseObject> {
  * @param {() => void} offline - A function to be invoked if the device is not connected to an internet network.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function checkConnectivity(online: () => void, offline: () => void): Promise<ResponseObject> {
+export async function checkConnectivity(
+  online: () => void,
+  offline: () => void
+): Promise<ResponseObject> {
   try {
     if (navigator.onLine) {
       online();
@@ -243,19 +246,24 @@ interface NotificationOptions {
  * @param {NotificationOptions} options - An object consisting of the notification's body, badge, icon, image, and silent options. Refer to https://github.com/ShafSpecs/remix-pwa#client-notification-api for additional info.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function SendNotification(title: string, options: NotificationOptions): Promise<ResponseObject> {
+export async function SendNotification(
+  title: string,
+  options: NotificationOptions
+): Promise<ResponseObject> {
   try {
     if ("Notification" in window) {
-      const permission = (await navigator.permissions.query({ name: "notifications" })).state;
-      let requestedPermission: null | NotificationPermission = null
+      const permission = (
+        await navigator.permissions.query({ name: "notifications" })
+      ).state;
+      let requestedPermission: null | NotificationPermission = null;
 
       // Send permission request only if the permission is not granted neither denied.
-      if(permission === 'prompt') {
-        requestedPermission = await Notification.requestPermission()
+      if (permission === "prompt") {
+        requestedPermission = await Notification.requestPermission();
       }
 
-      if (permission === "granted" || requestedPermission === 'granted') {
-        const registration = await navigator.serviceWorker.ready
+      if (permission === "granted" || requestedPermission === "granted") {
+        const registration = await navigator.serviceWorker.ready;
         await registration.showNotification(title, options);
         return {
           status: "success",
@@ -288,7 +296,10 @@ export async function SendNotification(title: string, options: NotificationOptio
  * @param {() => void} notVisible - A function to be invoked if the element is not visible on the current page.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function Visibility(isVisible: () => void, notVisible: () => void): Promise<ResponseObject> {
+export async function Visibility(
+  isVisible: () => void,
+  notVisible: () => void
+): Promise<ResponseObject> {
   try {
     if (document.visibilityState) {
       const visibleState = document.visibilityState;
@@ -388,7 +399,11 @@ export async function WebShare(data: any): Promise<ResponseObject> {
  * @param {string} text - An accompanying text alongside the header.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function WebShareLink(url: string, title: string, text: string): Promise<ResponseObject> {
+export async function WebShareLink(
+  url: string,
+  title: string,
+  text: string
+): Promise<ResponseObject> {
   try {
     if (navigator.canShare({ url })) {
       await navigator.share({
@@ -421,7 +436,11 @@ export async function WebShareLink(url: string, title: string, text: string): Pr
  * @param {string} text - An accompanying text alongside the header.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function WebShareFile(title: string, data: any[], text: string): Promise<ResponseObject> {
+export async function WebShareFile(
+  title: string,
+  data: any[],
+  text: string
+): Promise<ResponseObject> {
   let filesArray = [...data];
   try {
     if (navigator.canShare && navigator.canShare({ files: filesArray })) {

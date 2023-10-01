@@ -1,4 +1,5 @@
-import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs, TypedResponse } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import { getClient } from "~/db/client.server";
 import { getAccountByEmail } from "~/models/account.server";
 import { formDataGetter } from "~/utils/formDataGetter";

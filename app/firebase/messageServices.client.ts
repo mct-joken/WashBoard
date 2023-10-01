@@ -1,10 +1,5 @@
-import {
-  MessagePayload,
-  Unsubscribe,
-  getMessaging,
-  getToken,
-  onMessage,
-} from "firebase/messaging";
+import type { MessagePayload, Unsubscribe } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 export const requestToken = async (vapidServerKey: string) => {
   const messaging = getMessaging();

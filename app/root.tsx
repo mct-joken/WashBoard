@@ -4,7 +4,8 @@ import {
   type LinksFunction,
   type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
-import { FirebaseOptions, initializeApp } from "firebase/app";
+import type { FirebaseOptions } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import {
   Links,
   LiveReload,

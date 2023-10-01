@@ -1,9 +1,10 @@
-import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import { getClient, initializeClient } from "~/db/client.server";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
-import { Notification } from "~/firebase/messageServices.server";
+import type { Notification } from "~/firebase/messageServices.server";
 import { updateUse } from "~/models/use.server";
 
 type LaundryStatusAPI = {

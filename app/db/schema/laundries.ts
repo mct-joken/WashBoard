@@ -1,13 +1,9 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { rooms } from "./rooms";
-import {
-  InferSelectModel,
-  InferInsertModel,
-  sql,
-  relations,
-} from "drizzle-orm";
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { AliasedColumns } from "~/types/aliasedColumns";
+import type { AliasedColumns } from "~/types/aliasedColumns";
 import { makeAlias } from "~/utils/makeAlias";
 import { uses } from "./uses";
 import { useHistories } from "./useHistories";

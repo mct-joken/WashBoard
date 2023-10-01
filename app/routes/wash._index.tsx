@@ -8,7 +8,7 @@ import { Form, useActionData, useNavigate } from "@remix-run/react";
 import type { action as startWashAction } from "~/routes/resources.wash.start.$laundryId";
 import { useAuth } from "~/hooks/useAuth";
 import { Spinner } from "~/components/spinner";
-import { LaundryCheckAvailableAPIResponse } from "./resources.laundry.checkAvailable.$id";
+import type { LaundryCheckAvailableAPIResponse } from "./resources.laundry.checkAvailable.$id";
 
 const Wash = () => {
   const actionData = useActionData<typeof startWashAction>();

@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
-import { Account, NewAccount, accounts } from "~/db/schema";
+import type { Account, NewAccount } from "~/db/schema";
+import { accounts } from "~/db/schema";
 
 /**
  * `accounts`テーブルから全ての`Account`を取得する

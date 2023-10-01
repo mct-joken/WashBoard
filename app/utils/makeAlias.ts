@@ -1,4 +1,5 @@
-import { Column, SQL, getTableName, sql } from "drizzle-orm";
+import type { Column } from "drizzle-orm";
+import { SQL, getTableName, sql } from "drizzle-orm";
 
 export const makeAlias = <TData>(
   column: Column<{

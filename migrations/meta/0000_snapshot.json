@@ -48,9 +48,7 @@
       "indexes": {
         "accounts_email_unique": {
           "name": "accounts_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -105,12 +103,8 @@
           "name": "laundries_roomId_rooms_id_fk",
           "tableFrom": "laundries",
           "tableTo": "rooms",
-          "columnsFrom": [
-            "roomId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["roomId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -154,9 +148,7 @@
       "indexes": {
         "rooms_place_unique": {
           "name": "rooms_place_unique",
-          "columns": [
-            "place"
-          ],
+          "columns": ["place"],
           "isUnique": true
         }
       },
@@ -224,12 +216,8 @@
           "name": "useHistories_accountId_accounts_id_fk",
           "tableFrom": "useHistories",
           "tableTo": "accounts",
-          "columnsFrom": [
-            "accountId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["accountId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -237,12 +225,8 @@
           "name": "useHistories_laundryId_laundries_id_fk",
           "tableFrom": "useHistories",
           "tableTo": "laundries",
-          "columnsFrom": [
-            "laundryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["laundryId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -296,12 +280,8 @@
           "name": "uses_accountId_accounts_id_fk",
           "tableFrom": "uses",
           "tableTo": "accounts",
-          "columnsFrom": [
-            "accountId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["accountId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -309,12 +289,8 @@
           "name": "uses_laundryId_laundries_id_fk",
           "tableFrom": "uses",
           "tableTo": "laundries",
-          "columnsFrom": [
-            "laundryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["laundryId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }

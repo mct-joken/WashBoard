@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
-import { NewRoom, Room, rooms } from "~/db/schema";
+import type { NewRoom, Room } from "~/db/schema";
+import { rooms } from "~/db/schema";
 
 /**
  * `rooms`テーブルから全ての`Room`を取得する

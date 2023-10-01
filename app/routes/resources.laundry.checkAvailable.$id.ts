@@ -1,6 +1,7 @@
-import { ActionFunctionArgs, TypedResponse, json } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs, TypedResponse } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import { getClient } from "~/db/client.server";
-import { Laundry, Room } from "~/db/schema";
+import type { Laundry, Room } from "~/db/schema";
 import { isString } from "~/utils/type";
 
 export const loader = () => null;

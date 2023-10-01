@@ -1,5 +1,6 @@
-import { AppLoadContext } from "@remix-run/cloudflare";
-import { DrizzleD1Database, drizzle } from "drizzle-orm/d1";
+import type { AppLoadContext } from "@remix-run/cloudflare";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/d1";
 import * as schema from "./schema";
 
 type Client = { db?: DrizzleD1Database<typeof schema> };

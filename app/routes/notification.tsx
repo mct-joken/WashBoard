@@ -1,13 +1,14 @@
-import { LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Menu from "~/components/menu";
 import { requestToken } from "~/firebase/messageServices.client";
-import {
+import type {
   NotificationSubscribeAPI,
   action as subscribeNotificationAction,
 } from "~/routes/resources.notification.subscribe";
-import {
+import type {
   NotificationSendAPI,
   action as sendNotificationAction,
 } from "~/routes/resources.notification.send";

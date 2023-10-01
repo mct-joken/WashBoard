@@ -1,14 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
-import {
-  Laundry,
-  LaundryColumns,
-  NewLaundry,
-  Room,
-  RoomColumns,
-  laundries,
-  rooms,
-} from "~/db/schema";
+import type { Laundry, NewLaundry, Room } from "~/db/schema";
+import { LaundryColumns, RoomColumns, laundries, rooms } from "~/db/schema";
 
 const laundryWithRoomFields = {
   ...LaundryColumns,

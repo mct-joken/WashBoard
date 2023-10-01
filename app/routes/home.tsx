@@ -4,7 +4,7 @@ import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
 import { useAuth } from "~/hooks/useAuth";
-import {
+import type {
   UsesAPI,
   UsesAPIResponse,
   action as getUsesAction,

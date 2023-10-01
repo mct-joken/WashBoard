@@ -1,4 +1,5 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
+import { json, redirect } from "@remix-run/cloudflare";
 import { desc } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { pushMessage } from "~/firebase/messageServices.server";

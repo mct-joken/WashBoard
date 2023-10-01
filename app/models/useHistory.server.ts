@@ -1,12 +1,9 @@
 import { eq } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
+import type { Account, Laundry, NewUseHistory, UseHistory } from "~/db/schema";
 import {
-  Account,
   AccountColumns,
-  Laundry,
   LaundryColumns,
-  NewUseHistory,
-  UseHistory,
   UseHistoryColumns,
   accounts,
   laundries,
