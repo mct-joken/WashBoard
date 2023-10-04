@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<div align="center">
   <img src="public/washboard-app-banner.png" style="width:100%;">
-  <h4>WashBoardは、学生寮での洗濯に関する問題をスマートに解決するアプリです。</h4>
+  <p style="font-weight:600;margin:1rem;">WashBoardは、学生寮での洗濯に関する問題をスマートに解決するアプリです。</p>
 </div>
 
 # Washboard
