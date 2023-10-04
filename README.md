@@ -1,4 +1,9 @@
-# WashBoard
+<div style="text-align:center">
+  <img src="public/washboard-app-banner.png" style="width:100%;">
+  <h4>WashBoardは、学生寮での洗濯に関する問題をスマートに解決するアプリです。</h4>
+</div>
+
+# Washboard
 
 ## 開発
 
