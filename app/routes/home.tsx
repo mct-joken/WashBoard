@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { json } from "@remix-run/cloudflare";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import {
+  Link,
+  useFetcher,
+  useLoaderData,
+  useRevalidator,
+} from "@remix-run/react";
 import Menu from "~/components/menu";
 import { getClient } from "~/db/client.server";
 import { useAuth } from "~/hooks/useAuth";
@@ -12,6 +17,7 @@ import {
 import { fetcherSubmitter } from "~/utils/fetcherSubmitter";
 import { Header } from "~/components/header";
 import { Spinner } from "~/components/spinner";
+import { useInterval } from "~/hooks/useInterval";
 
 export const loader = async () => {
   const rooms = await getClient().query.rooms.findMany({
@@ -32,6 +38,7 @@ export default function Home() {
     "/resources/uses",
     "POST"
   );
+  const revalidator = useRevalidator();
 
   useEffect(() => {
     if (usesFetcher.data?.uses == null) {
@@ -48,6 +55,14 @@ export default function Home() {
       accountEmail: user.email,
     });
   }, [user]);
+
+  useEffect(() => {
+    const onFocus = revalidator.revalidate;
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  });
+
+  useInterval(revalidator.revalidate, 10_000);
 
   return (
     <>
