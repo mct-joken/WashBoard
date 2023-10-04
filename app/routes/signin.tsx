@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "~/hooks/useAuth";
 import { useEffect } from "react";
 import { Spinner } from "~/components/spinner";
+import appBanner from "public/washboard-app.png";
 
 const Signin = (): React.ReactElement => {
   const { state } = useLocation();
@@ -25,18 +26,10 @@ const Signin = (): React.ReactElement => {
     <div
       className="
         h-screen
-        flex flex-col justify-center items-center gap-5
+        flex flex-col justify-center items-center gap-9
       "
     >
-      <div
-        className="
-          px-8 py-3 underline
-          text-3xl text-white bg-sky-400
-          flex flex-row justify-center items-end
-        "
-      >
-        <MdOutlineLocalLaundryService /> Washboard
-      </div>
+      <img src={appBanner} className="w-72" />
       {!ready || user != null ? (
         <Spinner />
       ) : (
