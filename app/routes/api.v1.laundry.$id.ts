@@ -97,7 +97,7 @@ export const action = async ({
         use.account.messageToken,
         {
           title: "洗濯回収のお知らせ",
-          body: `${laundry.room?.place}の洗濯機で、あなたの洗濯物が取り出されたようです。`,
+          body: `${laundry.room?.place}の洗濯機で、あなたの洗濯物が取り出されました。`,
         },
         {
           projectId: env.FIREBASE_PROJECT_ID,
