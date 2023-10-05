@@ -4,7 +4,11 @@ import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
 import { Notification } from "~/firebase/messageServices.server";
-import { updateUse } from "~/models/use.server";
+import {
+  deleteUseById,
+  getUseByLaundryId,
+  updateUse,
+} from "~/models/use.server";
 
 type LaundryStatusAPI = {
   status: string;
@@ -77,6 +81,30 @@ export const action = async ({
       projectId: env.FIREBASE_PROJECT_ID,
       serviceAccount: getServiceAccount(env),
     });
+  }
+
+  // 洗濯開始
+  if (!laundry.running && result.running) {
+    const use = await getUseByLaundryId(laundry.id);
+    if (use?.endAt) {
+      await deleteUseById(use.id);
+    } else if (use) {
+      return json({}, 423);
+    }
+
+    if (use?.account?.messageToken) {
+      await pushMessage(
+        use.account.messageToken,
+        {
+          title: "洗濯回収のお知らせ",
+          body: `${laundry.room?.place}の洗濯機で、あなたの洗濯物が取り出されたようです。`,
+        },
+        {
+          projectId: env.FIREBASE_PROJECT_ID,
+          serviceAccount: getServiceAccount(env),
+        }
+      );
+    }
   }
 
   return json({}, 200);
