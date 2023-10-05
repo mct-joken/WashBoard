@@ -51,10 +51,12 @@ export default function Home() {
     if (user?.email == null) {
       return;
     }
-    submitUses({
-      accountEmail: user.email,
-    });
-  }, [user]);
+    if (uses == null || revalidator.state === "loading") {
+      submitUses({
+        accountEmail: user.email,
+      });
+    }
+  }, [user, revalidator.state]);
 
   useEffect(() => {
     const onFocus = revalidator.revalidate;
