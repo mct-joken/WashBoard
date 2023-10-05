@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "@remix-run/react";
 import { signInWithGoogle } from "~/firebase/authServices.client";
-import { MdOutlineLocalLaundryService } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "~/hooks/useAuth";
 import { useEffect } from "react";

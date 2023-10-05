@@ -74,7 +74,12 @@ export default function Home() {
   return (
     <>
       <Header title={"利用状況"} />
-      <div className="text-center my-3">
+      <div
+        className="
+          flex flex-col items-center gap-4
+          text-center
+        "
+      >
         <select
           name="sort"
           id="sort"
@@ -85,77 +90,88 @@ export default function Home() {
           </option>
           <option value="empty">空きあり</option>
         </select>
-      </div>
-      <p className="border rounded mx-10"></p>
-      <div
-        className="
-          px-5 my-5 max-h-72
-          flex flex-col justify-center items-center gap-2
-          overflow-y-auto
-        "
-      >
-        {rooms.map((room) => {
-          const availableLaundriesCount = room.laundries.filter(
-            (r) => !r.running
-          ).length;
-          if (availableLaundriesCount > 0) {
-            return (
-              <div className="flex flex-row justify-center gap-3" key={room.id}>
-                <div
-                  className="
-                    py-1 px-5 rounded-3xl
-                    bg-blue-400 text-white
-                  "
-                >
-                  空
-                </div>
-                <p className="text-lg">{room.place}</p>
-                <p className="text-lg">{availableLaundriesCount}台使用可</p>
-              </div>
-            );
-          } else if (filter == "all") {
-            return (
-              <div className="flex flex-row justify-center gap-3" key={room.id}>
-                <div
-                  className="
-                    py-1 px-5 rounded-3xl
-                    bg-red-400 text-white
-                  "
-                >
-                  満
-                </div>
-                <p className="text-lg">{room.place}</p>
-                <p className="text-lg">{availableLaundriesCount}台使用可</p>
-              </div>
-            );
-          }
-        })}
-      </div>
-      <p className="border rounded mx-10"></p>
-      <p className="text-center my-3">あなたの利用状況</p>
-      {!ready || uses == null ? (
-        <Spinner />
-      ) : uses.length > 0 ? (
+
+        <p className="border rounded w-3/4" />
+
         <div
           className="
-            py-3 max-h-52 overflow-y-auto
-            flex flex-row justify-center gap-3
+            max-h-72
+            flex flex-col justify-center items-center gap-2
+            overflow-y-auto
           "
         >
-          {uses.map((use) => (
-            <UseStatusCard use={use} key={use.id} />
-          ))}
+          {rooms.map((room) => {
+            const availableLaundriesCount = room.laundries.filter(
+              (r) => !r.running
+            ).length;
+            if (availableLaundriesCount > 0) {
+              return (
+                <div
+                  className="flex flex-row justify-center gap-3"
+                  key={room.id}
+                >
+                  <div
+                    className="
+                      py-1 px-5 rounded-3xl
+                      bg-blue-400 text-white
+                    "
+                  >
+                    空
+                  </div>
+                  <p className="text-lg">{room.place}</p>
+                  <p className="text-lg">{availableLaundriesCount}台使用可</p>
+                </div>
+              );
+            } else if (filter == "all") {
+              return (
+                <div
+                  className="flex flex-row justify-center gap-3"
+                  key={room.id}
+                >
+                  <div
+                    className="
+                      py-1 px-5 rounded-3xl
+                      bg-red-400 text-white
+                    "
+                  >
+                    満
+                  </div>
+                  <p className="text-lg">{room.place}</p>
+                  <p className="text-lg">{availableLaundriesCount}台使用可</p>
+                </div>
+              );
+            }
+          })}
         </div>
-      ) : (
-        <p className="text-center mb-5">なし</p>
-      )}
+
+        <p className="border rounded w-3/4" />
+
+        <p>あなたの利用状況</p>
+
+        {!ready || uses == null ? (
+          <Spinner />
+        ) : uses.length > 0 ? (
+          <div
+            className="
+              max-h-52 overflow-y-auto
+              flex flex-col justify-center gap-3
+            "
+          >
+            {uses.map((use) => (
+              <UseStatusCard use={use} key={use.id} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center mb-5">なし</p>
+        )}
+      </div>
       <Menu />
     </>
   );
 }
 
 const UseStatusCard = (props: { use: UsesAPIResponse["uses"][number] }) => (
-  <div className="flex flex-row gap-3">
+  <div className="flex flex-row justify-center gap-3">
     <p className="text-lg">{props.use.laundry?.room?.place}</p>
     {props.use.laundry?.running ? (
       <p
