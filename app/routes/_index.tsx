@@ -1,8 +1,8 @@
 import { redirect, MetaFunction } from "@remix-run/cloudflare";
 export const meta: MetaFunction = () => {
   return [
-    { title: "Washboard" },
-    { name: "description", content: "Washboard" },
+    { title: "WashBoard" },
+    { name: "description", content: "WashBoard" },
   ];
 };
 export const loader = () => {

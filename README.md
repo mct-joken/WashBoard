@@ -3,7 +3,7 @@
   <b>WashBoardは、学生寮での洗濯に関する問題をスマートに解決するアプリです。</b>
 </div>
 
-# Washboard
+# WashBoard
 
 ## 開発
 
