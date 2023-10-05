@@ -64,9 +64,16 @@ export default function Home() {
 
   useInterval(revalidator.revalidate, 10_000);
 
+  if (!user)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
+
   return (
     <>
-      <Header title={"利用状況"}></Header>
+      <Header title={"利用状況"} />
       <div className="text-center my-3">
         <select
           name="sort"
