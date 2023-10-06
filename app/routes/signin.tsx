@@ -28,7 +28,7 @@ const Signin = (): React.ReactElement => {
         flex flex-col justify-center items-center gap-9
       "
     >
-      <img src={appBanner} className="w-72" />
+      <img src={appBanner} className="w-72" alt="WashBoard" />
       {!ready || user != null ? (
         <Spinner />
       ) : (

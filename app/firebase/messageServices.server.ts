@@ -9,7 +9,7 @@ export type Notification = {
   link?: string;
 };
 
-type MessageConfig = {
+export type MessageConfig = {
   projectId: string;
   serviceAccount: GoogleApplicationCredentials;
 };

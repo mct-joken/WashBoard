@@ -1,14 +1,14 @@
 import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import { isNotNull, isNull } from "drizzle-orm";
 import { getClient, initializeClient } from "~/db/client.server";
-import { pushMessage } from "~/firebase/messageServices.server";
+import {
+  pushMessage,
+  Notification,
+  MessageConfig,
+} from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
-import { Notification } from "~/firebase/messageServices.server";
-import {
-  deleteUseById,
-  getUseByLaundryId,
-  updateUse,
-} from "~/models/use.server";
+import { updateUse } from "~/models/use.server";
 
 type LaundryStatusAPI = {
   status: string;
@@ -31,6 +31,10 @@ export const action = async ({
   initializeClient(context);
   const env = context.env as Env;
   const laundryId = params.id;
+  const messageConfig: MessageConfig = {
+    projectId: env.FIREBASE_PROJECT_ID,
+    serviceAccount: getServiceAccount(env),
+  };
 
   if (laundryId == null) {
     return json({}, 400);
@@ -58,13 +62,19 @@ export const action = async ({
 
   // 洗濯終了
   if (laundry.running && !result.running) {
-    const use = await getClient().query.uses.findFirst({
-      where: (use, { eq }) => eq(use.laundryId, laundryId),
+    const uses = await getClient().query.uses.findMany({
+      where: (use, { eq, and }) =>
+        and(eq(use.laundryId, laundryId), isNull(use.endAt)),
       with: { account: true },
     });
-    if (use == null) {
+    if (uses.length == 0) {
       return json({}, 200);
     }
+    if (uses.length >= 2) {
+      return json({}, 500);
+    }
+
+    const use = uses[0];
 
     await updateUse({ id: use.id, endAt: new Date() });
 
@@ -77,34 +87,31 @@ export const action = async ({
       body: `${laundry.room?.place}の洗濯機の洗濯が完了しました！`,
       link: `/wash/complete/${laundry.id}`,
     };
-    await pushMessage(use.account.messageToken, notification, {
-      projectId: env.FIREBASE_PROJECT_ID,
-      serviceAccount: getServiceAccount(env),
-    });
+    await pushMessage(use.account.messageToken, notification, messageConfig);
   }
 
   // 洗濯開始
   if (!laundry.running && result.running) {
-    const use = await getUseByLaundryId(laundry.id);
-    if (use?.endAt) {
-      await deleteUseById(use.id);
-    } else if (use) {
-      return json({}, 423);
-    }
+    const uses = await getClient().query.uses.findMany({
+      where: (use, { eq, and }) =>
+        and(eq(use.laundryId, laundryId), isNotNull(use.endAt)),
+      with: { account: true },
+    });
 
-    if (use?.account?.messageToken) {
-      await pushMessage(
-        use.account.messageToken,
-        {
-          title: "洗濯回収のお知らせ",
-          body: `${laundry.room?.place}の洗濯機で、あなたの洗濯物が取り出されました。`,
-        },
-        {
-          projectId: env.FIREBASE_PROJECT_ID,
-          serviceAccount: getServiceAccount(env),
+    new Set(uses.map((use) => use.account?.messageToken)).forEach(
+      async (messageToken) => {
+        if (messageToken == null) {
+          return;
         }
-      );
-    }
+
+        const notification: Notification = {
+          title: "未回収の洗濯物のお知らせ",
+          body: `${laundry.room?.place}の洗濯室で、回収していない洗濯物があります。`,
+        };
+
+        await pushMessage(messageToken, notification, messageConfig);
+      }
+    );
   }
 
   return json({}, 200);
