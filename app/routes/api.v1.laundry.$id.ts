@@ -86,9 +86,7 @@ export const action = async ({
   // 洗濯開始
   if (!laundry.running && result.running) {
     const use = await getUseByLaundryId(laundry.id);
-    if (use?.endAt) {
-      await deleteUseById(use.id);
-    } else if (use) {
+    if (use != null && use.endAt == null) {
       return json({}, 423);
     }
 
