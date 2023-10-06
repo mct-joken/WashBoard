@@ -1,14 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
 import { getClient, initializeClient } from "~/db/client.server";
-import { pushMessage } from "~/firebase/messageServices.server";
+import { pushMessage, Notification } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
 import { getLaundryById, updateLaundry } from "~/models/laundry.server";
-import { Notification } from "~/firebase/messageServices.server";
-import {
-  deleteUseById,
-  getUseByLaundryId,
-  updateUse,
-} from "~/models/use.server";
+import { getUseByLaundryId, updateUse } from "~/models/use.server";
 
 type LaundryStatusAPI = {
   status: string;
