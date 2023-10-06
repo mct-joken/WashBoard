@@ -1,5 +1,4 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
-import { desc } from "drizzle-orm";
 import { getClient } from "~/db/client.server";
 import { pushMessage } from "~/firebase/messageServices.server";
 import { getServiceAccount } from "~/firebase/serviceAccount.server";
@@ -50,7 +49,7 @@ export const action = async ({
   if (forgetting === "on") {
     const prevUse = await getClient().query.useHistories.findFirst({
       where: (useHistory, { eq }) => eq(useHistory.laundryId, laundryId),
-      orderBy: (useHistory) => desc(useHistory.endAt),
+      orderBy: (useHistory, { desc }) => desc(useHistory.endAt),
       with: {
         account: true,
       },
