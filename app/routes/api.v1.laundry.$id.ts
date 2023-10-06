@@ -98,19 +98,20 @@ export const action = async ({
       with: { account: true },
     });
 
-    uses.forEach(async (use) => {
-      if (use?.account?.messageToken == null) {
-        return;
+    new Set(uses.map((use) => use.account?.messageToken)).forEach(
+      async (messageToken) => {
+        if (messageToken == null) {
+          return;
+        }
+
+        const notification: Notification = {
+          title: "未回収の洗濯物のお知らせ",
+          body: `${laundry.room?.place}の洗濯室で、回収していない洗濯物があります。`,
+        };
+
+        await pushMessage(messageToken, notification, messageConfig);
       }
-
-      const notification: Notification = {
-        title: "未回収の洗濯物のお知らせ",
-        body: `${laundry.room
-          ?.place}の洗濯室で、${use.endAt?.toLocaleString()}から回収していない洗濯物があります。`,
-      };
-
-      await pushMessage(use.account.messageToken, notification, messageConfig);
-    });
+    );
   }
 
   return json({}, 200);
