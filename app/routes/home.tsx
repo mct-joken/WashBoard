@@ -44,7 +44,7 @@ export default function Home() {
     if (usesFetcher.data?.uses == null) {
       return;
     }
-    setUses(usesFetcher.data.uses);
+    setUses(usesFetcher.data.uses as UsesAPIResponse["uses"]);
   }, [usesFetcher.data]);
 
   useEffect(() => {
@@ -175,7 +175,7 @@ export default function Home() {
 const UseStatusCard = (props: { use: UsesAPIResponse["uses"][number] }) => (
   <div className="flex flex-row justify-center gap-3">
     <p className="text-lg">{props.use.laundry?.room?.place}</p>
-    {props.use.laundry?.running ? (
+    {props.use.endAt == null ? (
       <p
         className="
           px-5 py-1 rounded-3xl

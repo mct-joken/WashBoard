@@ -13,6 +13,7 @@ export type UsesAPI = {
 export type UsesAPIResponse = {
   uses: {
     id: string;
+    endAt: Date | null;
     laundry?: {
       id?: string;
       running?: boolean | null;
@@ -56,6 +57,7 @@ export const action = async ({
     {
       uses: uses.map((use) => ({
         id: use.id,
+        endAt: use.endAt,
         laundry: {
           id: use.laundry?.id,
           running: use.laundry?.running,
