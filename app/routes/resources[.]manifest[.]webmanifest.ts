@@ -4,8 +4,8 @@ import type { LoaderFunction } from "@remix-run/cloudflare";
 export let loader: LoaderFunction = async () => {
   return json(
     {
-      short_name: "Washboard",
-      name: "Washboard",
+      short_name: "WashBoard",
+      name: "WashBoard",
       start_url: "/home",
       display: "standalone",
       background_color: "#d3d7dd",
