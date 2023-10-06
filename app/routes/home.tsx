@@ -155,7 +155,7 @@ export default function Home() {
         ) : uses.length > 0 ? (
           <div
             className="
-              max-h-52 overflow-y-auto
+              pb-3 max-h-52 overflow-y-auto
               flex flex-col justify-center gap-3
             "
           >
