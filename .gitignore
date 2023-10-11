@@ -13,3 +13,6 @@ wrangler.toml
 
 /public/entry.worker.js
 /public/firebase-messaging-sw.js
+
+# 生SQl文生成用の断片コード
+/app/routes/query.tsx
