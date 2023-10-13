@@ -1,0 +1,16 @@
+insert into rooms (id, place, createdAt, updatedAt) values
+('DVMmJzT76lOOJQTbd5ycp', '3号館1階', CURRENT_TIMESTAMP, null),
+('2GfF8a5jlj9a11xfBylxZ', '3号館3階', CURRENT_TIMESTAMP, null),
+('gEt38ze6Swbw9emxTYLkp', '4号館2階', CURRENT_TIMESTAMP, null),
+('PtL2ZQqhxydp9JuGvIzwf', '4号館3階', CURRENT_TIMESTAMP, null);
+
+insert into laundries (id, roomId, running, createdAt, updatedAt) values
+('eyzODasX3LUeMmF1S7vjG', 'DVMmJzT76lOOJQTbd5ycp', '0', CURRENT_TIMESTAMP, null),
+('a9jd6cRU00Bn4LLca-kmE', 'DVMmJzT76lOOJQTbd5ycp', '0', CURRENT_TIMESTAMP, null),
+('5609v__kQGtLzEL-oOjHF', 'DVMmJzT76lOOJQTbd5ycp', '0', CURRENT_TIMESTAMP, null),
+('xwt8BCCAfUe-eQRFGNt55', '2GfF8a5jlj9a11xfBylxZ', '0', CURRENT_TIMESTAMP, null),
+('MfHeBSzVvzWvuhi4Qag8K', '2GfF8a5jlj9a11xfBylxZ', '0', CURRENT_TIMESTAMP, null),
+('37wCl_bfLsRBXS8WA69C0', 'gEt38ze6Swbw9emxTYLkp', '0', CURRENT_TIMESTAMP, null),
+('FWPcvCmN627iUvzHnq9Ba', 'gEt38ze6Swbw9emxTYLkp', '0', CURRENT_TIMESTAMP, null),
+('WIgK0WRLp_e2I5--KPAGT', 'PtL2ZQqhxydp9JuGvIzwf', '0', CURRENT_TIMESTAMP, null),
+('GdhPBZr8gcemuPcUf3gzW', 'PtL2ZQqhxydp9JuGvIzwf', '0', CURRENT_TIMESTAMP, null);

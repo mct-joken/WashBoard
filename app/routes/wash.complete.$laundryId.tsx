@@ -51,9 +51,10 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
   const use = await getClient().query.uses.findFirst({
     where: (use, { eq }) => eq(use.laundryId, laundryId),
+    orderBy: (use, { desc }) => desc(use.createdAt),
     with: { account: true },
   });
-  if (use == null) {
+  if (use?.endAt == null) {
     return json({ error: true }, 404);
   }
   if (use.account?.email !== accountEmail) {

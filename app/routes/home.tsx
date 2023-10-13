@@ -22,6 +22,7 @@ import { useInterval } from "~/hooks/useInterval";
 export const loader = async () => {
   const rooms = await getClient().query.rooms.findMany({
     with: { laundries: true },
+    orderBy: (room, { asc }) => asc(room.place),
   });
   return json({ rooms });
 };
