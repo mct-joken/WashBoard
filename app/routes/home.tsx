@@ -98,9 +98,10 @@ export default function Home() {
 
         <div
           className="
-            max-h-72
+            max-h-72 w-3/4
             flex flex-col justify-center items-center gap-2
             overflow-y-auto
+            box-content pt-4
           "
         >
           {rooms.map((room) => {
