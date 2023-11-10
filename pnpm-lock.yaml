@@ -39,8 +39,8 @@ dependencies:
     specifier: ^16.0.3
     version: 16.3.1
   drizzle-orm:
-    specifier: ^0.28.5
-    version: 0.28.5(@cloudflare/workers-types@3.19.0)
+    specifier: ^0.29.0
+    version: 0.29.0(@cloudflare/workers-types@3.19.0)
   firebase:
     specifier: ^10.3.1
     version: 10.3.1
@@ -3914,8 +3914,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.5(@cloudflare/workers-types@3.19.0):
-    resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
+  /drizzle-orm@0.29.0(@cloudflare/workers-types@3.19.0):
+    resolution: {integrity: sha512-AC+CuW4GezVjsZDGU9u9B4HyikudOyYVhjm6he3Xn1D6Kky7bHGKob97MMX2piO+t9b6UuajLzlii/T/lu1qwA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
